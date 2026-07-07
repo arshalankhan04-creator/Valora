@@ -1,7 +1,9 @@
-// Stub for JWT token generation
+const jwt = require('jsonwebtoken');
+
 const generateToken = (id) => {
-  // To be implemented in the auth phase
-  return '';
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  });
 };
 
 module.exports = generateToken;

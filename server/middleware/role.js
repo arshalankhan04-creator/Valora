@@ -1,9 +1,12 @@
-// Stub for role-based authorization guard
-const authorize = (...roles) => {
+const restrictTo = (...roles) => {
   return (req, res, next) => {
-    // To be implemented in the auth phase
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: `User role '${req.user ? req.user.role : 'none'}' is not authorized to access this route`
+      });
+    }
     next();
   };
 };
 
-module.exports = { authorize };
+module.exports = { restrictTo };
