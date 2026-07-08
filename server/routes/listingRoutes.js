@@ -5,17 +5,26 @@ const {
   getListings,
   getListingById,
   updateListing,
-  deleteListing
+  deleteListing,
+  getMyListings
 } = require('../controllers/listingController');
+const { protect } = require('../middleware/auth');
+const { restrictTo } = require('../middleware/role');
 
-// Placeholder routes
-router.route('/')
-  .post(createListing)
-  .get(getListings);
+// Public route for searching/getting all listings
+router.get('/', getListings);
 
-router.route('/:id')
-  .get(getListingById)
-  .put(updateListing)
-  .delete(deleteListing);
+// Protected route for getting own listings (must be defined BEFORE /:id)
+router.get('/mine', protect, restrictTo('seller'), getMyListings);
+
+// Public route for getting listing by ID
+router.get('/:id', getListingById);
+
+// Protected routes (require login and 'seller' role for creation)
+router.post('/', protect, restrictTo('seller'), createListing);
+
+// Protected routes (require ownership check in controller)
+router.put('/:id', protect, updateListing);
+router.delete('/:id', protect, deleteListing);
 
 module.exports = router;
