@@ -133,7 +133,7 @@ const Home = () => {
             const hasImage = listing.images && listing.images.length > 0;
             const thumbnailUrl = hasImage
               ? `http://localhost:5000/${listing.images[0]}`
-              : 'https://via.placeholder.com/250x150?text=No+Image';
+              : `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150" viewBox="0 0 250 150"><rect width="100%" height="100%" fill="%23eee"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%23666">No Image Available</text></svg>`;
 
             return (
               <div
