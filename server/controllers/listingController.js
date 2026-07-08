@@ -1,10 +1,28 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 const Listing = require('../models/Listing');
+
+// Helper to delete physical files
+const deletePhysicalFiles = (files) => {
+  if (!files || files.length === 0) return;
+  files.forEach(filePath => {
+    try {
+      const fullPath = path.isAbsolute(filePath) ? filePath : path.join(__dirname, '..', filePath);
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      }
+    } catch (e) {
+      console.error('Failed to delete physical file:', filePath, e.message);
+    }
+  });
+};
 
 // @desc    Create a new listing
 // @route   POST /api/listings
 // @access  Private (Seller only)
 const createListing = async (req, res, next) => {
+  const uploadedFiles = req.files ? req.files.map(file => `uploads/${file.filename}`) : [];
   try {
     const {
       brand,
@@ -19,15 +37,18 @@ const createListing = async (req, res, next) => {
 
     // Validate required fields
     if (!brand || !model || !year || !kmDriven || !fuelType || !transmission || price === undefined) {
+      deletePhysicalFiles(uploadedFiles);
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
     // Validate enums
     if (!['Petrol', 'Diesel', 'Electric', 'CNG', 'Hybrid'].includes(fuelType)) {
+      deletePhysicalFiles(uploadedFiles);
       return res.status(400).json({ message: 'Invalid fuel type' });
     }
 
     if (!['Manual', 'Automatic'].includes(transmission)) {
+      deletePhysicalFiles(uploadedFiles);
       return res.status(400).json({ message: 'Invalid transmission type' });
     }
 
@@ -35,16 +56,18 @@ const createListing = async (req, res, next) => {
       seller: req.user.id,
       brand,
       model,
-      year,
-      kmDriven,
+      year: Number(year),
+      kmDriven: Number(kmDriven),
       fuelType,
       transmission,
-      price,
-      description
+      price: Number(price),
+      description,
+      images: uploadedFiles // Explicitly ignore any images sent in body JSON
     });
 
     res.status(201).json(listing);
   } catch (error) {
+    deletePhysicalFiles(uploadedFiles);
     next(error);
   }
 };
@@ -159,8 +182,8 @@ const updateListing = async (req, res, next) => {
     // Update fields if provided
     if (brand) listing.brand = brand;
     if (model) listing.model = model;
-    if (year) listing.year = year;
-    if (kmDriven) listing.kmDriven = kmDriven;
+    if (year) listing.year = Number(year);
+    if (kmDriven) listing.kmDriven = Number(kmDriven);
     if (fuelType) {
       if (!['Petrol', 'Diesel', 'Electric', 'CNG', 'Hybrid'].includes(fuelType)) {
         return res.status(400).json({ message: 'Invalid fuel type' });
@@ -173,7 +196,7 @@ const updateListing = async (req, res, next) => {
       }
       listing.transmission = transmission;
     }
-    if (price !== undefined) listing.price = price;
+    if (price !== undefined) listing.price = Number(price);
     if (description !== undefined) listing.description = description;
     if (status) {
       if (!['active', 'pending_review', 'sold', 'rejected'].includes(status)) {
@@ -212,6 +235,9 @@ const deleteListing = async (req, res, next) => {
       return res.status(403).json({ message: 'Not authorized to delete this listing' });
     }
 
+    // Delete associated physical files
+    deletePhysicalFiles(listing.images);
+
     await Listing.findByIdAndDelete(id);
     res.json({ message: 'Listing removed' });
   } catch (error) {
@@ -231,11 +257,100 @@ const getMyListings = async (req, res, next) => {
   }
 };
 
+// @desc    Add images to an existing listing
+// @route   POST /api/listings/:id/images
+// @access  Private (Owner only)
+const addListingImages = async (req, res, next) => {
+  const uploadedFiles = req.files ? req.files.map(file => `uploads/${file.filename}`) : [];
+  try {
+    const { id } = req.params;
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      deletePhysicalFiles(uploadedFiles);
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      deletePhysicalFiles(uploadedFiles);
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    // Ownership check
+    if (listing.seller.toString() !== req.user.id) {
+      deletePhysicalFiles(uploadedFiles);
+      return res.status(403).json({ message: 'Not authorized to update this listing' });
+    }
+
+    if (uploadedFiles.length === 0) {
+      return res.status(400).json({ message: 'Please select files to upload' });
+    }
+
+    // Enforce limits
+    if (listing.images.length + uploadedFiles.length > 6) {
+      deletePhysicalFiles(uploadedFiles);
+      return res.status(400).json({ message: 'Upload failed. Max of 6 images allowed per listing' });
+    }
+
+    listing.images.push(...uploadedFiles);
+    const updatedListing = await listing.save();
+    res.json(updatedListing);
+  } catch (error) {
+    deletePhysicalFiles(uploadedFiles);
+    next(error);
+  }
+};
+
+// @desc    Remove a single image from a listing
+// @route   DELETE /api/listings/:id/images/:imageIndex
+// @access  Private (Owner only)
+const deleteListingImage = async (req, res, next) => {
+  try {
+    const { id, imageIndex } = req.params;
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    // Ownership check
+    if (listing.seller.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to modify this listing' });
+    }
+
+    const index = parseInt(imageIndex);
+    if (isNaN(index) || index < 0 || index >= listing.images.length) {
+      return res.status(400).json({ message: 'Invalid image index' });
+    }
+
+    const imagePath = listing.images[index];
+
+    // Splice listing image out
+    listing.images.splice(index, 1);
+    await listing.save();
+
+    // Delete physical file
+    deletePhysicalFiles([imagePath]);
+
+    res.json({ message: 'Image removed successfully', listing });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createListing,
   getListings,
   getListingById,
   updateListing,
   deleteListing,
-  getMyListings
+  getMyListings,
+  addListingImages,
+  deleteListingImage
 };

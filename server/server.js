@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+const path = require('path');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorHandler');
 
@@ -18,6 +19,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static upload files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Mount routes
 app.use('/api/auth', authRoutes);

@@ -6,10 +6,13 @@ const {
   getListingById,
   updateListing,
   deleteListing,
-  getMyListings
+  getMyListings,
+  addListingImages,
+  deleteListingImage
 } = require('../controllers/listingController');
 const { protect } = require('../middleware/auth');
 const { restrictTo } = require('../middleware/role');
+const { uploadImages } = require('../middleware/upload');
 
 // Public route for searching/getting all listings
 router.get('/', getListings);
@@ -21,10 +24,14 @@ router.get('/mine', protect, restrictTo('seller'), getMyListings);
 router.get('/:id', getListingById);
 
 // Protected routes (require login and 'seller' role for creation)
-router.post('/', protect, restrictTo('seller'), createListing);
+router.post('/', protect, restrictTo('seller'), uploadImages, createListing);
 
 // Protected routes (require ownership check in controller)
 router.put('/:id', protect, updateListing);
 router.delete('/:id', protect, deleteListing);
+
+// Image uploading / deleting endpoints (require ownership check in controller)
+router.post('/:id/images', protect, uploadImages, addListingImages);
+router.delete('/:id/images/:imageIndex', protect, deleteListingImage);
 
 module.exports = router;
