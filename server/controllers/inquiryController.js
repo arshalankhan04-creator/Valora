@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Inquiry = require('../models/Inquiry');
 const Listing = require('../models/Listing');
+const sendEmail = require('../utils/sendEmail');
 
 // @desc    Create new inquiry thread or append message to existing thread
 // @route   POST /api/inquiries
@@ -19,13 +20,13 @@ const createInquiry = async (req, res, next) => {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
-    const listing = await Listing.findById(listingId);
+    const listing = await Listing.findById(listingId).populate('seller', 'name email');
     if (!listing) {
       return res.status(404).json({ message: 'Listing not found' });
     }
 
     // Prevent seller from inquiring on their own listing
-    if (listing.seller.toString() === req.user.id) {
+    if (listing.seller._id.toString() === req.user.id) {
       return res.status(400).json({ message: 'You cannot inquire about your own listing' });
     }
 
@@ -46,12 +47,28 @@ const createInquiry = async (req, res, next) => {
     inquiry = await Inquiry.create({
       listing: listingId,
       buyer: req.user.id,
-      seller: listing.seller,
+      seller: listing.seller._id,
       messages: [{
         sender: req.user.id,
         text
       }]
     });
+
+    // Send email notification to seller asynchronously (non-blocking)
+    const sendNotification = async () => {
+      try {
+        const buyerName = req.user.name || 'A buyer';
+        await sendEmail({
+          to: listing.seller.email,
+          subject: `Valora - New Inquiry on your ${listing.brand} ${listing.model}`,
+          text: `Hello ${listing.seller.name},\n\nYou have received a new inquiry from ${buyerName} regarding your vehicle listing: ${listing.brand} ${listing.model}.\n\nMessage:\n"${text}"\n\nPlease log in to the Valora app to reply to this message.\n\nBest regards,\nThe Valora Team`
+        });
+        console.log(`Inquiry notification email sent to ${listing.seller.email} successfully.`);
+      } catch (err) {
+        console.error('Nodemailer Error: Failed to send inquiry notification email:', err.message);
+      }
+    };
+    sendNotification();
 
     res.status(201).json(inquiry);
   } catch (error) {
