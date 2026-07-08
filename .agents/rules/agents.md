@@ -22,3 +22,7 @@ Every route needs clean error handling (proper 400/401/403, no silent failures).
 Do not over-engineer: no features, abstractions, or config beyond what I asked for.
 If anything is unclear, ambiguous, or you're making an assumption — stop and ask
 me before writing code, rather than guessing.
+
+Always propose an implementation plan and wait for approval before writing
+or modifying code, even for scaffolding/setup tasks — not just for business
+logic changes.
