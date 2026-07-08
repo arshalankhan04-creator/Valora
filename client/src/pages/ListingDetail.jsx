@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
 const ListingDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,6 +62,18 @@ const ListingDetail = () => {
     (listing.conditionScore !== null && listing.conditionScore !== undefined) ||
     (listing.predictedPriceMin !== null && listing.predictedPriceMin !== undefined) ||
     (listing.predictedPriceMax !== null && listing.predictedPriceMax !== undefined);
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to permanently delete this listing?')) return;
+    try {
+      await api.delete(`/listings/${id}`);
+      alert('Listing deleted successfully.');
+      navigate('/');
+    } catch (err) {
+      console.error('Delete listing error:', err);
+      alert(err.response?.data?.message || 'Failed to delete listing.');
+    }
+  };
 
   return (
     <div>
@@ -131,8 +144,8 @@ const ListingDetail = () => {
           </div>
         ) : isOwnListing ? (
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={() => alert('Edit Listing Placeholder')}>Edit Listing</button>
-            <button onClick={() => alert('Delete Listing Placeholder')}>Delete Listing</button>
+            <button onClick={() => navigate(`/edit-listing/${id}`)}>Edit Listing</button>
+            <button onClick={handleDelete}>Delete Listing</button>
           </div>
         ) : (
           <div>
