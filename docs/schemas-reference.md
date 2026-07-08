@@ -39,6 +39,7 @@ ML fields — populated later by Django via Node, default null/empty until integ
 - trustBreakdown: Object, default null
 
 - status: String, enum ['active','pending_review','sold','rejected'], default 'active'
+- rejectionReason: String, default null
 - timestamps: true
 - index on { brand: 1, year: 1, price: 1 } for search/filter
 

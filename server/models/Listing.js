@@ -90,12 +90,16 @@ const ListingSchema = new mongoose.Schema({
     default: null
   },
   
-  status: {
-    type: String,
-    enum: ['active', 'pending_review', 'sold', 'rejected'],
-    default: 'active'
-  }
-}, {
+    status: {
+      type: String,
+      enum: ['active', 'pending_review', 'sold', 'rejected'],
+      default: 'active'
+    },
+    rejectionReason: {
+      type: String,
+      default: null
+    }
+  }, {
   timestamps: true
 });
 
