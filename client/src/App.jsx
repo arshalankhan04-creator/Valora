@@ -36,6 +36,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/listings/:id" element={<div>Listing Detail Page (Placeholder)</div>} />
           </Routes>
         </div>
       </Router>
