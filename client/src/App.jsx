@@ -7,6 +7,8 @@ import Register from './pages/Register';
 import ListingDetail from './pages/ListingDetail';
 import CreateListing from './pages/CreateListing';
 import EditListing from './pages/EditListing';
+import Inquiries from './pages/Inquiries';
+import InquiryThread from './pages/InquiryThread';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
@@ -16,6 +18,9 @@ const Navigation = () => {
       <Link to="/" style={{ marginRight: '15px' }}>Home</Link>
       {user && user.role === 'seller' && (
         <Link to="/create-listing" style={{ marginRight: '15px' }}>Create Listing</Link>
+      )}
+      {user && (
+        <Link to="/inquiries" style={{ marginRight: '15px' }}>Inquiries</Link>
       )}
       {user ? (
         <>
@@ -45,6 +50,8 @@ function App() {
             <Route path="/listings/:id" element={<ListingDetail />} />
             <Route path="/create-listing" element={<CreateListing />} />
             <Route path="/edit-listing/:id" element={<EditListing />} />
+            <Route path="/inquiries" element={<Inquiries />} />
+            <Route path="/inquiries/:id" element={<InquiryThread />} />
           </Routes>
         </div>
       </Router>

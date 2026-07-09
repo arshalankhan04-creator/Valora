@@ -12,6 +12,35 @@ const ListingDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [messageText, setMessageText] = useState('');
+  const [contactError, setContactError] = useState('');
+  const [contactLoading, setContactLoading] = useState(false);
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setContactError('');
+    if (!messageText.trim()) {
+      setContactError('Please enter a message.');
+      return;
+    }
+
+    setContactLoading(true);
+    try {
+      const res = await api.post('/inquiries', {
+        listingId: id,
+        text: messageText.trim()
+      });
+      const threadId = res.data._id;
+      navigate(`/inquiries/${threadId}`);
+    } catch (err) {
+      console.error('Contact seller error:', err);
+      setContactError(err.response?.data?.message || 'Failed to send message.');
+    } finally {
+      setContactLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchListing = async () => {
       setLoading(true);
@@ -149,7 +178,35 @@ const ListingDetail = () => {
           </div>
         ) : (
           <div>
-            <button onClick={() => alert('Contact Seller Placeholder')}>Contact Seller</button>
+            {!showContactForm ? (
+              <button onClick={() => setShowContactForm(true)}>Contact Seller</button>
+            ) : (
+              <form onSubmit={handleContactSubmit} style={{ maxWidth: '400px', marginTop: '10px' }}>
+                <h4>Send Inquiry to Seller</h4>
+                {contactError && <p style={{ color: 'red' }}>{contactError}</p>}
+                <textarea
+                  rows="4"
+                  style={{ width: '100%', marginBottom: '10px' }}
+                  placeholder="Type your message here..."
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  disabled={contactLoading}
+                  required
+                />
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button type="submit" disabled={contactLoading}>
+                    {contactLoading ? 'Sending...' : 'Send Message'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => { setShowContactForm(false); setContactError(''); setMessageText(''); }} 
+                    disabled={contactLoading}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         )}
       </div>
