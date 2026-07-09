@@ -171,7 +171,7 @@ const ListingDetail = () => {
               <Link to="/login">Log in</Link> to contact the seller.
             </p>
           </div>
-        ) : isOwnListing ? (
+        ) : user.role === 'admin' ? null : isOwnListing ? (
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={() => navigate(`/edit-listing/${id}`)}>Edit Listing</button>
             <button onClick={handleDelete}>Delete Listing</button>

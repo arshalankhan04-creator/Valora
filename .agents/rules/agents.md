@@ -26,3 +26,7 @@ me before writing code, rather than guessing.
 Always propose an implementation plan and wait for approval before writing
 or modifying code, even for scaffolding/setup tasks — not just for business
 logic changes.
+
+NEVER run `git commit` or `git push` unless the user explicitly says
+"commit" or "push" in that exact message. Finishing a task, even
+successfully, is never sufficient reason to commit on your own.

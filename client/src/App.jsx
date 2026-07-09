@@ -24,7 +24,7 @@ const Navigation = () => {
           <Link to="/my-listings" style={{ marginRight: '15px' }}>My Listings</Link>
         </>
       )}
-      {user && (
+      {user && user.role !== 'admin' && (
         <Link to="/inquiries" style={{ marginRight: '15px' }}>Inquiries</Link>
       )}
       {user && user.role === 'admin' && (

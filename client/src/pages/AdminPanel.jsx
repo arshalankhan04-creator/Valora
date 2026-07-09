@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
@@ -11,6 +11,11 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
+  const [rejectingId, setRejectingId] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectError, setRejectError] = useState('');
+
+  const rejectInputRef = useRef(null);
 
   const LIMIT = 10;
 
@@ -57,25 +62,42 @@ const AdminPanel = () => {
     }
   };
 
-  const handleReject = async (id) => {
+  const handleStartReject = (id) => {
+    setRejectingId(id);
+    setRejectReason('');
+    setRejectError('');
+  };
+
+  const handleCancelReject = () => {
+    setRejectingId(null);
+    setRejectReason('');
+    setRejectError('');
+  };
+
+  const handleConfirmReject = async (id) => {
     setError('');
-    const reason = window.prompt('Enter reason for rejection:');
-    if (reason === null) return; // Cancelled - abort action entirely
-    if (!reason.trim()) {
-      alert('Rejection reason is required.');
+    setRejectError('');
+    if (!rejectReason.trim()) {
+      setRejectError('Reason is required');
+      setTimeout(() => {
+        rejectInputRef.current?.focus();
+      }, 0);
       return;
     }
 
     try {
-      await api.put(`/admin/listings/${id}/reject`, { reason: reason.trim() });
+      await api.put(`/admin/listings/${id}/reject`, { reason: rejectReason.trim() });
       alert('Listing rejected successfully.');
 
       // On success, if in flagged queue, remove it. If in all listings, update status to rejected.
       if (activeTab === 'flagged') {
         setListings(prev => prev.filter(item => item._id !== id));
       } else {
-        setListings(prev => prev.map(item => item._id === id ? { ...item, status: 'rejected', rejectionReason: reason.trim() } : item));
+        setListings(prev => prev.map(item => item._id === id ? { ...item, status: 'rejected', rejectionReason: rejectReason.trim() } : item));
       }
+      setRejectingId(null);
+      setRejectReason('');
+      setRejectError('');
     } catch (err) {
       console.error('Reject listing error:', err);
       setError(err.response?.data?.message || 'Failed to reject listing.');
@@ -182,13 +204,43 @@ const AdminPanel = () => {
                   </td>
 
                   <td>
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <Link to={`/listings/${listing._id}`}>View Details</Link>
-                      {listing.status !== 'active' && (
-                        <button type="button" onClick={() => handleApprove(listing._id)}>Approve</button>
-                      )}
-                      {listing.status !== 'rejected' && (
-                        <button type="button" onClick={() => handleReject(listing._id)}>Reject</button>
+                      
+                      {rejectingId === listing._id ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                          <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                            <input 
+                              ref={rejectInputRef}
+                              type="text" 
+                              placeholder="Reason..." 
+                              value={rejectReason} 
+                              onChange={(e) => {
+                                setRejectReason(e.target.value);
+                                if (rejectError && e.target.value.trim() !== '') {
+                                  setRejectError('');
+                                }
+                              }}
+                              style={{ padding: '4px' }}
+                            />
+                            <button type="button" onClick={() => handleConfirmReject(listing._id)}>Submit</button>
+                            <button type="button" onClick={handleCancelReject}>Cancel</button>
+                          </div>
+                          {rejectError && (
+                            <span style={{ color: 'red', fontSize: '0.8em', marginTop: '4px' }}>
+                              {rejectError}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          {listing.status !== 'active' && (
+                            <button type="button" onClick={() => handleApprove(listing._id)}>Approve</button>
+                          )}
+                          {listing.status !== 'rejected' && (
+                            <button type="button" onClick={() => handleStartReject(listing._id)}>Reject</button>
+                          )}
+                        </>
                       )}
                     </div>
                   </td>
