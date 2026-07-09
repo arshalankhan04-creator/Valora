@@ -10,6 +10,7 @@ import EditListing from './pages/EditListing';
 import Inquiries from './pages/Inquiries';
 import InquiryThread from './pages/InquiryThread';
 import MyListings from './pages/MyListings';
+import AdminPanel from './pages/AdminPanel';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
@@ -25,6 +26,9 @@ const Navigation = () => {
       )}
       {user && (
         <Link to="/inquiries" style={{ marginRight: '15px' }}>Inquiries</Link>
+      )}
+      {user && user.role === 'admin' && (
+        <Link to="/admin" style={{ marginRight: '15px' }}>Admin</Link>
       )}
       {user ? (
         <>
@@ -57,6 +61,7 @@ function App() {
             <Route path="/inquiries" element={<Inquiries />} />
             <Route path="/inquiries/:id" element={<InquiryThread />} />
             <Route path="/my-listings" element={<MyListings />} />
+            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </div>
       </Router>
