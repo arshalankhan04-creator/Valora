@@ -51,6 +51,9 @@ function App() {
       <Router>
         <div>
           <Navigation />
+          <div className="bg-blue-500 p-4 text-white font-bold text-center" id="tailwind-test-element">
+            Tailwind v4 is successfully integrated!
+          </div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
