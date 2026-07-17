@@ -12,6 +12,7 @@ import InquiryThread from './pages/InquiryThread';
 import MyListings from './pages/MyListings';
 import AdminPanel from './pages/AdminPanel';
 import Browse from './pages/Browse';
+import ComingSoon from './pages/ComingSoon';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -39,6 +40,14 @@ function App() {
             <Route path="/inquiries/:id" element={<PageWrapper><InquiryThread /></PageWrapper>} />
             <Route path="/my-listings" element={<PageWrapper><MyListings /></PageWrapper>} />
             <Route path="/admin" element={<PageWrapper><AdminPanel /></PageWrapper>} />
+            
+            {/* Stub/Placeholder Routes */}
+            <Route path="/about" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/finance" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/faq" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/privacy" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/contact" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="*" element={<PageWrapper><ComingSoon /></PageWrapper>} />
           </Routes>
           <Footer />
         </div>

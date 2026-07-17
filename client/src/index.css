@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Anoxic';
+  src: url('/fonts/AnoxicScMedium-p7g0O.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AnoxicLight';
+  src: url('/fonts/AnoxicLight-3zlK8.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AnoxicOutline';
+  src: url('/fonts/AnoxicOutlineMedium-DOY1R.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;

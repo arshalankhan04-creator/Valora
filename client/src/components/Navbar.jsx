@@ -7,7 +7,11 @@ const Navbar = () => {
     <nav className="w-full bg-white border-b border-gray-100 py-4 px-6 md:px-8 z-30 relative">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {/* Left Side: Logo */}
-        <Link to="/" className="text-2xl font-extrabold text-[#0F0F17] tracking-tight no-underline">
+        <Link 
+          to="/" 
+          className="text-2xl no-underline tracking-wide"
+          style={{ fontFamily: 'Anoxic, sans-serif', color: '#0F0F17', fontWeight: 500 }}
+        >
           Valora
         </Link>
 
@@ -16,13 +20,13 @@ const Navbar = () => {
           <Link to="/browse" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
             Buy
           </Link>
-          <Link to="/" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/create-listing" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
             Sell
           </Link>
-          <Link to="/" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/finance" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
             Finance
           </Link>
-          <Link to="/" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/about" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
             About
           </Link>
         </div>
