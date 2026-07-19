@@ -1,0 +1,141 @@
+Column Name,Data Type,Missing %,Unique Values,Classification,Recommended Action,Reason
+position,int64,0.0,20,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+loc,object,15.47,511,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+myear,int64,0.0,34,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+bt,object,0.05,11,Duplicate feature,Drop,Duplicate encoding of 'body_type_new' (group: body_type); keeping only the canonical column.
+tt,object,0.0,2,Duplicate feature,Drop,Duplicate encoding of 'transmission_type_new' (group: transmission); keeping only the canonical column.
+ft,object,0.0,5,Duplicate feature,Drop,Duplicate encoding of 'fuel_type_new' (group: fuel_type); keeping only the canonical column.
+km,object,0.0,23863,Duplicate feature,Drop,Duplicate encoding of 'km_driven' (group: km_driven); keeping only the canonical column.
+ip,int64,0.0,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+pi,object,1.8,37134,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+images,object,0.0,37135,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+imgCount,int64,0.0,54,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+threesixty,bool,0.0,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+dvn,object,0.0,4159,Duplicate feature,Drop,Redundant member of the 'variant_text_combo' duplicate group; whole group dropped.
+oem,object,0.0,46,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+model,object,0.0,382,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+modelId,int64,0.0,682,Duplicate feature,Drop,Redundant member of the 'model_numeric_id' duplicate group; whole group dropped.
+vid,object,0.0,4159,Duplicate feature,Drop,Redundant member of the 'variant_text_combo' duplicate group; whole group dropped.
+centralVariantId,int64,0.0,4585,Duplicate feature,Drop,Redundant member of the 'model_numeric_id' duplicate group; whole group dropped.
+variantName,object,0.0,3488,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+city_x,object,0.0,617,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+vlink,object,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+price,object,0.0,2374,Target,Keep,This is the prediction target (display-formatted; cleaned separately).
+pu,object,0.0,6865,Potential data leakage feature,Drop,Numerically identical to (or directly derived from) the target price.
+discountValue,int64,0.0,30,Low-information feature,Drop,Column is dominated (>99%) by a single value; carries negligible predictive signal.
+msp,int64,0.0,3,Low-information feature,Drop,Column is dominated (>99%) by a single value; carries negligible predictive signal.
+priceSaving,object,99.99,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+pageNo,int64,0.0,162,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+utype,object,0.0,2,Duplicate feature,Drop,Duplicate encoding of 'seller_type_new' (group: seller_type); keeping only the canonical column.
+views,int64,0.0,2143,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+usedCarId,int64,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+usedCarSkuId,object,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+ucid,int64,0.0,37811,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+sid,object,0.0,37811,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+tmGaadiStore,bool,0.0,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+emiwidget,object,0.0,6206,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+transmissionType,object,0.0,2,Duplicate feature,Drop,Duplicate encoding of 'transmission_type_new' (group: transmission); keeping only the canonical column.
+dynx_itemid_x,int64,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+dynx_itemid2_x,int64,0.0,4585,Duplicate feature,Drop,Redundant member of the 'model_numeric_id' duplicate group; whole group dropped.
+dynx_totalvalue_x,int64,0.0,6865,Potential data leakage feature,Drop,Numerically identical to (or directly derived from) the target price.
+leadForm,int64,0.0,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+leadFormCta,object,14.02,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+offers,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+compare,bool,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+brandingIcon,object,97.98,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+pageType,object,0.0,2,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+carType,object,0.0,3,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+corporateId,int64,0.0,6,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+top_features,object,0.0,400,Useful predictive feature,Transform,Stringified list of equipment; converted into a feature-count during engineering.
+comfort_features,object,0.0,2016,Useful predictive feature,Transform,Stringified list of equipment; converted into a feature-count during engineering.
+interior_features,object,0.0,527,Useful predictive feature,Transform,Stringified list of equipment; converted into a feature-count during engineering.
+exterior_features,object,0.0,1893,Useful predictive feature,Transform,Stringified list of equipment; converted into a feature-count during engineering.
+safety_features,object,0.0,2116,Useful predictive feature,Transform,Stringified list of equipment; converted into a feature-count during engineering.
+Color,object,0.42,798,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Engine Type,object,2.3,658,Low-information feature,Drop,"Free-text field whose signal is already captured by structured spec columns (Displacement, No of Cylinder, Max Power); too high-cardinality to one-hot usefully."
+Displacement,float64,0.14,187,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Max Power,object,0.61,1018,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Max Torque,object,0.61,844,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+No of Cylinder,float64,0.38,11,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Values per Cylinder,float64,0.6,7,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Value Configuration,object,20.71,13,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+BoreX Stroke,object,66.58,224,High-missing-value feature,Drop,"66.58% missing, above the 40.0% threshold."
+Turbo Charger,object,5.75,9,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Super Charger,object,14.14,5,Low-information feature,Drop,Column is dominated (>99%) by a single value; carries negligible predictive signal.
+Length,object,0.96,516,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Width,object,0.98,394,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Height,object,0.96,423,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Wheel Base,object,1.47,328,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Front Tread,object,41.98,219,High-missing-value feature,Drop,"41.98% missing, above the 40.0% threshold."
+Rear Tread,object,41.98,238,High-missing-value feature,Drop,"41.98% missing, above the 40.0% threshold."
+Kerb Weight,object,34.75,831,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Gross Weight,object,55.24,436,High-missing-value feature,Drop,"55.24% missing, above the 40.0% threshold."
+Gear Box,object,1.08,132,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Drive Type,object,11.89,24,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Seating Capacity,float64,0.05,11,Duplicate feature,Drop,Duplicate encoding of 'seating_capacity_new' (group: seating_capacity); keeping only the canonical column.
+Steering Type,object,2.14,11,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Turning Radius,object,15.47,239,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Front Brake Type,object,0.86,43,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Rear Brake Type,object,0.86,48,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Top Speed,object,39.76,372,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Acceleration,object,36.99,414,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Tyre Type,object,0.68,37,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+No Door Numbers,float64,0.12,5,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Cargo Volumn,object,17.8,398,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+model_type_new,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+originalLocation,float64,100.0,0,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+page_title,object,0.0,37814,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+compare_car_details,float64,100.0,0,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+seller_type_new,object,0.0,2,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+seating_capacity_new,float64,0.08,10,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+transmission_type,object,0.0,2,Duplicate feature,Drop,Duplicate encoding of 'transmission_type_new' (group: transmission); keeping only the canonical column.
+model_year_new,int64,0.0,34,Duplicate feature,Drop,Duplicate encoding of 'myear' (group: model_year); keeping only the canonical column.
+car_type_new,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+model_name,object,0.0,382,Duplicate feature,Drop,Duplicate encoding of 'model' (group: model); keeping only the canonical column.
+model_id_new,int64,0.0,382,Duplicate feature,Drop,Redundant member of the 'model_numeric_id' duplicate group; whole group dropped.
+oem_name,object,0.0,46,Duplicate feature,Drop,Duplicate encoding of 'oem' (group: brand); keeping only the canonical column.
+price_range_segment,object,0.0,5,Potential data leakage feature,Drop,Price bucket computed directly from the target; using it would leak the answer.
+dealer_id_new,int64,0.0,1,Low-information feature,Drop,Column is dominated (>99%) by a single value; carries negligible predictive signal.
+state,object,0.0,33,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+city_id_new,int64,0.0,617,Duplicate feature,Drop,Redundant member of the 'city_numeric_id' duplicate group; whole group dropped.
+fuel_type,object,0.0,5,Duplicate feature,Drop,Duplicate encoding of 'fuel_type_new' (group: fuel_type); keeping only the canonical column.
+max_engine_capacity_new,float64,0.14,187,Duplicate feature,Drop,Duplicate encoding of 'Displacement' (group: engine_cc_numeric); keeping only the canonical column.
+transmission_type_new,object,0.0,2,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+km_driven,int64,0.0,23862,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+model_new,object,0.0,382,Duplicate feature,Drop,Duplicate encoding of 'model' (group: model); keeping only the canonical column.
+vehicle_type_new,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+brand_name,object,0.0,46,Duplicate feature,Drop,Duplicate encoding of 'oem' (group: brand); keeping only the canonical column.
+engine_cc,object,0.43,6,Duplicate feature,Drop,Redundant member of the 'engine_cc_bucket' duplicate group; whole group dropped.
+fuel_type_new,object,0.0,5,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+car_segment,object,0.05,11,Duplicate feature,Drop,Duplicate encoding of 'body_type_new' (group: body_type); keeping only the canonical column.
+used_carid,int64,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+city_name_new,object,0.0,617,Duplicate feature,Drop,Duplicate encoding of 'city_x' (group: city); keeping only the canonical column.
+page_type,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+city_y,object,0.0,617,Duplicate feature,Drop,Duplicate encoding of 'city_x' (group: city); keeping only the canonical column.
+engine_capacity_new,object,0.43,6,Duplicate feature,Drop,Redundant member of the 'engine_cc_bucket' duplicate group; whole group dropped.
+body_type_new,object,0.0,12,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+owner_type_new,object,0.0,6,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+mileage_new,object,2.38,627,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+dealer_id,int64,0.0,1,Low-information feature,Drop,Column is dominated (>99%) by a single value; carries negligible predictive signal.
+model_year,int64,0.0,34,Duplicate feature,Drop,Duplicate encoding of 'myear' (group: model_year); keeping only the canonical column.
+variant_name,object,0.0,4131,Duplicate feature,Drop,Duplicate encoding of 'variantName' (group: variant); keeping only the canonical column.
+price_segment,object,0.0,5,Potential data leakage feature,Drop,Price bucket computed directly from the target; using it would leak the answer.
+dynx_event,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+dynx_pagetype,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+dynx_itemid_y,int64,0.0,37814,Identifier,Drop,Unique per-listing identifier / URL with no generalizable predictive signal.
+dynx_itemid2_y,int64,0.0,4585,Duplicate feature,Drop,Redundant member of the 'model_numeric_id' duplicate group; whole group dropped.
+dynx_totalvalue_y,int64,0.0,6867,Potential data leakage feature,Drop,Numerically identical to (or directly derived from) the target price.
+brand_new,object,0.0,46,Duplicate feature,Drop,Duplicate encoding of 'oem' (group: brand); keeping only the canonical column.
+variant_new,object,0.0,4131,Duplicate feature,Drop,Duplicate encoding of 'variantName' (group: variant); keeping only the canonical column.
+exterior_color,object,0.33,798,Duplicate feature,Drop,Duplicate encoding of 'Color' (group: color); keeping only the canonical column.
+min_engine_capacity_new,float64,0.14,187,Duplicate feature,Drop,Duplicate encoding of 'Displacement' (group: engine_cc_numeric); keeping only the canonical column.
+owner_type,object,0.0,6,Duplicate feature,Drop,Duplicate encoding of 'owner_type_new' (group: owner_type); keeping only the canonical column.
+price_segment_new,object,0.0,5,Potential data leakage feature,Drop,Price bucket computed directly from the target; using it would leak the answer.
+template_name_new,object,0.0,4,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+page_template,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+template_Type_new,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+experiment,object,0.0,1,Website/metadata field,Drop,"Describes the listing/website session, not an attribute of the vehicle itself."
+Fuel Suppy System,object,14.55,99,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Compression Ratio,object,73.1,100,High-missing-value feature,Drop,"73.1% missing, above the 40.0% threshold."
+Alloy Wheel Size,object,34.76,18,Useful predictive feature,Keep,"Passed all exclusion rules: sufficiently populated, non-constant, non-identifier."
+Ground Clearance Unladen,object,94.31,31,High-missing-value feature,Drop,"94.31% missing, above the 40.0% threshold."
