@@ -12,7 +12,7 @@ export default {
         tealPrimary: '#0B655F',
         tealDark: '#09524D',
         bgLight: '#FAFAFC',
-        textCharcoal: '#0F0F17',
+        textCharcoal: '#000000',
         socialIndigo: '#6C3FF5',
         animCharcoal: '#2D2D2D',
         animOrange: '#FF9B6B',

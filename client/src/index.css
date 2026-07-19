@@ -1,5 +1,17 @@
 @import "tailwindcss";
-@config "../tailwind.config.js";
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-primaryDark: #3B32C4;
+  --color-tealPrimary: #0B655F;
+  --color-tealDark: #09524D;
+  --color-bgLight: #FAFAFC;
+  --color-textCharcoal: #000000;
+  --color-socialIndigo: #6C3FF5;
+  --color-animCharcoal: #2D2D2D;
+  --color-animOrange: #FF9B6B;
+  --color-animYellow: #E8D754;
+}
 
 @font-face {
   font-family: 'Anoxic';

@@ -167,7 +167,7 @@ const Browse = () => {
           {/* Left Side: Filters Column (3 cols) */}
           <div className="lg:col-span-3 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm lg:sticky lg:top-8">
             <div className="flex items-center justify-between mb-1">
-              <h2 className="text-xl font-extrabold text-gray-900 m-0">
+              <h2 className="text-xl font-extrabold text-black m-0">
                 Filters
               </h2>
               <button
@@ -362,7 +362,7 @@ const Browse = () => {
             {/* Results Header Control Bar in a Box */}
             <div className="bg-white border border-gray-100 rounded-2xl p-4 flex flex-row items-center justify-between shadow-sm">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-extrabold text-gray-950 m-0">
+                <h2 className="text-xl font-extrabold text-black m-0">
                   Search Results
                 </h2>
                 <span className="text-[10px] font-bold bg-indigo-50 text-primary border border-indigo-100 px-2.5 py-1 rounded-full select-none">
