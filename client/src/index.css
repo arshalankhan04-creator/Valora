@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Anoxic';
+  src: url('/fonts/AnoxicScMedium-p7g0O.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AnoxicLight';
+  src: url('/fonts/AnoxicLight-3zlK8.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AnoxicOutline';
+  src: url('/fonts/AnoxicOutlineMedium-DOY1R.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -57,14 +78,18 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+}
+
+.container-valora {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 16px;
   box-sizing: border-box;
 }
 

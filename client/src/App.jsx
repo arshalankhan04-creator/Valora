@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -11,61 +11,45 @@ import Inquiries from './pages/Inquiries';
 import InquiryThread from './pages/InquiryThread';
 import MyListings from './pages/MyListings';
 import AdminPanel from './pages/AdminPanel';
+import Browse from './pages/Browse';
+import ComingSoon from './pages/ComingSoon';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-const Navigation = () => {
-  const { user, logout } = useAuth();
-
-  return (
-    <nav style={{ padding: '10px', background: '#eee', marginBottom: '20px' }}>
-      <Link to="/" style={{ marginRight: '15px' }}>Home</Link>
-      {user && user.role === 'seller' && (
-        <>
-          <Link to="/create-listing" style={{ marginRight: '15px' }}>Create Listing</Link>
-          <Link to="/my-listings" style={{ marginRight: '15px' }}>My Listings</Link>
-        </>
-      )}
-      {user && user.role !== 'admin' && (
-        <Link to="/inquiries" style={{ marginRight: '15px' }}>Inquiries</Link>
-      )}
-      {user && user.role === 'admin' && (
-        <Link to="/admin" style={{ marginRight: '15px' }}>Admin</Link>
-      )}
-      {user ? (
-        <>
-          <span style={{ marginRight: '15px' }}>Welcome, {user.name} ({user.role})</span>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/login" style={{ marginRight: '15px' }}>Login</Link>
-          <Link to="/register">Register</Link>
-        </>
-      )}
-    </nav>
-  );
-};
+const PageWrapper = ({ children }) => (
+  <div className="container-valora py-8 text-center flex-1">
+    {children}
+  </div>
+);
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div>
-          <Navigation />
-          <div className="bg-blue-500 p-4 text-white font-bold text-center" id="tailwind-test-element">
-            Tailwind v4 is successfully integrated!
-          </div>
+        <div className="w-full min-h-screen bg-gray-50 flex flex-col">
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/listings/:id" element={<ListingDetail />} />
-            <Route path="/create-listing" element={<CreateListing />} />
-            <Route path="/edit-listing/:id" element={<EditListing />} />
-            <Route path="/inquiries" element={<Inquiries />} />
-            <Route path="/inquiries/:id" element={<InquiryThread />} />
-            <Route path="/my-listings" element={<MyListings />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/browse" element={<PageWrapper><Browse /></PageWrapper>} />
+            <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+            <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+            <Route path="/listings/:id" element={<PageWrapper><ListingDetail /></PageWrapper>} />
+            <Route path="/create-listing" element={<PageWrapper><CreateListing /></PageWrapper>} />
+            <Route path="/edit-listing/:id" element={<PageWrapper><EditListing /></PageWrapper>} />
+            <Route path="/inquiries" element={<PageWrapper><Inquiries /></PageWrapper>} />
+            <Route path="/inquiries/:id" element={<PageWrapper><InquiryThread /></PageWrapper>} />
+            <Route path="/my-listings" element={<PageWrapper><MyListings /></PageWrapper>} />
+            <Route path="/admin" element={<PageWrapper><AdminPanel /></PageWrapper>} />
+            
+            {/* Stub/Placeholder Routes */}
+            <Route path="/about" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/finance" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/faq" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/privacy" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="/contact" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+            <Route path="*" element={<PageWrapper><ComingSoon /></PageWrapper>} />
           </Routes>
+          <Footer />
         </div>
       </Router>
     </AuthProvider>
