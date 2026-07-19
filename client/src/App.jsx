@@ -11,6 +11,7 @@ import InquiryThread from './pages/InquiryThread';
 import MyListings from './pages/MyListings';
 import AdminPanel from './pages/AdminPanel';
 import Browse from './pages/Browse';
+import Wishlist from './pages/Wishlist';
 import ComingSoon from './pages/ComingSoon';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -31,6 +32,7 @@ const AppLayout = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/browse" element={<Browse />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/listings/:id" element={<ListingDetail />} />

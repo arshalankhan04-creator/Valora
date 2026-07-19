@@ -35,23 +35,23 @@ const Navbar = () => {
         <Link 
           to="/" 
           className="text-2xl no-underline tracking-wide"
-          style={{ fontFamily: 'Anoxic, sans-serif', color: '#0F0F17', fontWeight: 500 }}
+          style={{ fontFamily: 'Anoxic, sans-serif', color: 'var(--color-textCharcoal)', fontWeight: 500 }}
         >
           Valora
         </Link>
 
         {/* Center: Nav links */}
         <div className="hidden md:flex items-center gap-8">
-          <Link to="/browse" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/browse" className="text-gray-600 hover:text-primary font-semibold no-underline transition-colors text-sm">
             Buy
           </Link>
-          <Link to="/create-listing" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/create-listing" className="text-gray-600 hover:text-primary font-semibold no-underline transition-colors text-sm">
             Sell
           </Link>
-          <Link to="/finance" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/finance" className="text-gray-600 hover:text-primary font-semibold no-underline transition-colors text-sm">
             Finance
           </Link>
-          <Link to="/about" className="text-gray-600 hover:text-[#4F46E5] font-semibold no-underline transition-colors text-sm">
+          <Link to="/about" className="text-gray-600 hover:text-primary font-semibold no-underline transition-colors text-sm">
             About
           </Link>
         </div>
@@ -64,10 +64,10 @@ const Navbar = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 bg-transparent border-none p-1 cursor-pointer focus:outline-none"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 text-[#4F46E5] flex items-center justify-center font-extrabold text-xs select-none">
+                <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 text-primary flex items-center justify-center font-extrabold text-xs select-none">
                   {initials}
                 </div>
-                <span className="hidden sm:inline text-sm font-semibold text-gray-700 hover:text-[#4F46E5]">
+                <span className="hidden sm:inline text-sm font-semibold text-gray-700 hover:text-primary">
                   {user.name.split(' ')[0]}
                 </span>
                 <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -88,14 +88,14 @@ const Navbar = () => {
                       <Link
                         to="/my-listings"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#4F46E5] no-underline font-semibold"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary no-underline font-semibold"
                       >
                         My Listings
                       </Link>
                       <Link
                         to="/create-listing"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#4F46E5] no-underline font-semibold"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary no-underline font-semibold"
                       >
                         Add Listing
                       </Link>
@@ -106,16 +106,24 @@ const Navbar = () => {
                     <Link
                       to="/admin"
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#4F46E5] no-underline font-semibold"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary no-underline font-semibold"
                     >
                       Admin Panel
                     </Link>
                   )}
 
                   <Link
+                    to="/wishlist"
+                    onClick={() => setDropdownOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary no-underline font-semibold"
+                  >
+                    Wishlist
+                  </Link>
+
+                  <Link
                     to="/inquiries"
                     onClick={() => setDropdownOpen(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#4F46E5] no-underline font-semibold"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary no-underline font-semibold"
                   >
                     My Inquiries
                   </Link>
@@ -139,7 +147,7 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link to="/register" className="no-underline">
-                <Button variant="primary" pill className="px-5 py-2 text-sm font-bold bg-[#4F46E5]">
+                <Button variant="primary" pill className="px-5 py-2 text-sm font-bold bg-primary">
                   Register
                 </Button>
               </Link>

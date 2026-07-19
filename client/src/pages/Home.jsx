@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import CarCard from '../components/CarCard';
 import ClientFeedback from '../components/ui/testimonial';
@@ -48,72 +48,96 @@ const FEATURED_CARS = [
     year: 2020,
     price: 3800000,
     priceMinText: '₹38.0L',
-    priceMaxText: '₹41.0L',
+    priceMaxText: '₹41.5L',
     fuelType: 'Petrol',
     transmission: 'Automatic',
-    mileage: '24,000 km',
-    location: 'Delhi NCR',
+    mileage: '18,500 km',
+    location: 'Delhi',
     trustScore: 88,
-    postedDate: 'Posted 4 days ago',
+    postedDate: 'Posted 3 days ago',
     image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80',
     gradient: 'from-zinc-700 to-zinc-900',
   },
   {
     id: '4',
     brand: 'Porsche',
-    model: 'Macan GTS',
-    year: 2021,
-    price: 7800000,
-    priceMinText: '₹78.0L',
-    priceMaxText: '₹82.0L',
+    model: 'Cayenne Coupé',
+    year: 2022,
+    price: 12000000,
+    priceMinText: '₹1.15Cr',
+    priceMaxText: '₹1.25Cr',
     fuelType: 'Petrol',
     transmission: 'Automatic',
-    mileage: '14,800 km',
-    location: 'Pune',
+    mileage: '4,100 km',
+    location: 'Mumbai',
     trustScore: 97,
-    postedDate: 'Posted 3 hours ago',
+    postedDate: 'Posted 12 hours ago',
     image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80',
     gradient: 'from-amber-700 to-amber-900',
   },
   {
     id: '5',
-    brand: 'Jaguar',
-    model: 'XF Portfolio',
-    year: 2022,
-    price: 4800000,
-    priceMinText: '₹48.0L',
-    priceMaxText: '₹51.5L',
+    brand: 'Audi',
+    model: 'Q7 Technology',
+    year: 2021,
+    price: 7800000,
+    priceMinText: '₹78.0L',
+    priceMaxText: '₹82.0L',
     fuelType: 'Diesel',
     transmission: 'Automatic',
-    mileage: '6,400 km',
-    location: 'Chennai',
+    mileage: '12,400 km',
+    location: 'Pune',
     trustScore: 91,
-    postedDate: 'Posted 3 days ago',
-    image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=600&q=80',
-    gradient: 'from-red-800 to-red-950',
+    postedDate: 'Posted 4 days ago',
+    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
+    gradient: 'from-cyan-750 to-cyan-950',
   },
   {
     id: '6',
-    brand: 'Tesla',
-    model: 'Model 3 Long Range',
-    year: 2023,
-    price: 6000000,
-    priceMinText: '₹60.0L',
-    priceMaxText: '₹63.5L',
-    fuelType: 'Electric',
+    brand: 'BMW',
+    model: 'M4 Competition',
+    year: 2022,
+    price: 9800500,
+    priceMinText: '₹98.0L',
+    priceMaxText: '₹1.05Cr',
+    fuelType: 'Petrol',
     transmission: 'Automatic',
-    mileage: '4,100 km',
-    location: 'Hyderabad',
+    mileage: '3,200 km',
+    location: 'Bangalore',
     trustScore: 94,
-    postedDate: 'Posted Yesterday',
-    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
+    postedDate: 'Posted 5 days ago',
+    image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80',
     gradient: 'from-emerald-700 to-emerald-950',
   }
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
   const [featuredListings, setFeaturedListings] = useState([]);
   const [loadingListings, setLoadingListings] = useState(true);
+
+  // Search Filter States
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [priceRange, setPriceRange] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [availableBrands, setAvailableBrands] = useState([]);
+
+  // Fetch unique brands from database for dropdown pre-population
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await api.get('/listings');
+        if (res.data && res.data.length > 0) {
+          const brands = [...new Set(res.data.map(item => item.brand))].sort();
+          setAvailableBrands(brands);
+        }
+      } catch (err) {
+        console.error('Error fetching brands for homepage filters:', err);
+      }
+    };
+    fetchBrands();
+  }, []);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -134,15 +158,39 @@ const Home = () => {
     fetchListings();
   }, []);
 
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (selectedBrand) params.set('brand', selectedBrand);
+    if (selectedModel) params.set('model', selectedModel);
+    if (selectedLocation) params.set('location', selectedLocation);
+    
+    if (priceRange) {
+      if (priceRange === '0-20') {
+        params.set('minPrice', '0');
+        params.set('maxPrice', '2000000');
+      } else if (priceRange === '20-50') {
+        params.set('minPrice', '2000000');
+        params.set('maxPrice', '5000000');
+      } else if (priceRange === '50-100') {
+        params.set('minPrice', '5000000');
+        params.set('maxPrice', '10000000');
+      } else if (priceRange === '100+') {
+        params.set('minPrice', '10000000');
+      }
+    }
+    
+    navigate(`/browse?${params.toString()}`);
+  };
+
   return (
-    <div className="w-full bg-[#FAFAFC] min-h-screen flex flex-col font-sans">
+    <div className="w-full bg-bgLight min-h-screen flex flex-col font-sans">
 
       {/* Hero Section Container */}
       <div className="relative w-full min-h-[500px] bg-white overflow-hidden flex items-center">
 
         {/* Diagonal Slanted Indigo Background Split (Clipped Div) */}
         <div
-          className="absolute inset-y-0 right-0 w-[50%] bg-[#4F46E5] z-0 hidden md:block"
+          className="absolute inset-y-0 right-0 w-[50%] bg-primary z-0 hidden md:block"
           style={{ clipPath: 'polygon(62% 0, 100% 0, 100% 100%, 10% 100%)' }}
         />
 
@@ -152,9 +200,9 @@ const Home = () => {
           {/* Left Zone: Headline & Actions (On White background) */}
           <div className="flex-1 text-left space-y-8 max-w-xl">
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight m-0 uppercase" style={{ color: '#0F0F17' }}>
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight m-0 uppercase" style={{ color: 'var(--color-textCharcoal)' }}>
                 FAIR BUYING. <br />
-                <span style={{ color: '#4F46E5' }}>FAIR SELLING.</span>
+                <span style={{ color: 'var(--color-primary)' }}>FAIR SELLING.</span>
               </h1>
               <p className="text-gray-500 text-lg m-0 leading-relaxed max-w-lg">
                 Valora is the premium automotive marketplace designed to bring total transparency, trust, and ease to buying or selling your next vehicle.
@@ -162,10 +210,10 @@ const Home = () => {
             </div>
 
             <div className="flex flex-row items-center gap-4">
-              <Button variant="primary" pill className="px-8 py-3.5 shadow-lg shadow-indigo-600/20 text-sm font-bold bg-[#4F46E5]">
+              <Button onClick={() => navigate('/browse')} variant="primary" pill className="px-8 py-3.5 shadow-lg shadow-indigo-600/20 text-sm font-bold bg-primary">
                 Buy a Car
               </Button>
-              <Button variant="outline" pill className="px-8 py-3.5 text-sm font-bold border-gray-300 text-[#0F0F17]">
+              <Button onClick={() => navigate('/create-listing')} variant="outline" pill className="px-8 py-3.5 text-sm font-bold border-gray-300 text-textCharcoal">
                 Sell Yours
               </Button>
             </div>
@@ -191,12 +239,19 @@ const Home = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                 Brand
               </label>
-              <select className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-gray-700 appearance-none">
+              <select 
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none cursor-pointer"
+              >
                 <option value="">Select Brand</option>
-                <option value="audi">Audi</option>
-                <option value="bmw">BMW</option>
-                <option value="mercedes">Mercedes-Benz</option>
-                <option value="porsche">Porsche</option>
+                {availableBrands.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+                {!availableBrands.includes('Audi') && <option value="Audi">Audi</option>}
+                {!availableBrands.includes('BMW') && <option value="BMW">BMW</option>}
+                {!availableBrands.includes('Mercedes-Benz') && <option value="Mercedes-Benz">Mercedes-Benz</option>}
+                {!availableBrands.includes('Porsche') && <option value="Porsche">Porsche</option>}
               </select>
             </div>
 
@@ -205,11 +260,15 @@ const Home = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                 Model
               </label>
-              <select className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-gray-700 appearance-none">
+              <select 
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none cursor-pointer"
+              >
                 <option value="">Select Model</option>
-                <option value="sedan">Sedan</option>
-                <option value="suv">SUV</option>
-                <option value="coupe">Coupe</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Coupe">Coupe</option>
               </select>
             </div>
 
@@ -218,7 +277,11 @@ const Home = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                 Price Range
               </label>
-              <select className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-gray-700 appearance-none">
+              <select 
+                value={priceRange}
+                onChange={(e) => setPriceRange(e.target.value)}
+                className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none cursor-pointer"
+              >
                 <option value="">Select Price Range</option>
                 <option value="0-20">Under ₹20 Lakhs</option>
                 <option value="20-50">₹20 - ₹50 Lakhs</option>
@@ -232,18 +295,26 @@ const Home = () => {
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                 Location
               </label>
-              <select className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-gray-700 appearance-none">
+              <select 
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="w-full bg-[#F4F4F6] border-none rounded-lg p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 appearance-none cursor-pointer"
+              >
                 <option value="">Select Location</option>
-                <option value="mumbai">Mumbai</option>
-                <option value="delhi">Delhi</option>
-                <option value="bangalore">Bangalore</option>
-                <option value="pune">Pune</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Pune">Pune</option>
               </select>
             </div>
 
-            {/* Search Button (Inline!) */}
+            {/* Search Button */}
             <div className="w-full">
-              <Button variant="primary" className="w-full py-3.5 bg-[#4F46E5] shadow-lg shadow-indigo-600/10 font-bold">
+              <Button 
+                onClick={handleSearch}
+                variant="primary" 
+                className="w-full py-3.5 bg-primary shadow-lg shadow-indigo-600/10 font-bold cursor-pointer hover:bg-primaryDark transition-colors"
+              >
                 Search
               </Button>
             </div>
@@ -276,7 +347,7 @@ const Home = () => {
 
       {/* Browse by Category Section */}
       <div className="max-w-5xl mx-auto px-6 w-full mb-28 text-center mt-28">
-        <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#0F0F17' }}>
+        <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: 'var(--color-textCharcoal)' }}>
           Browse by Category
         </h2>
 
@@ -316,7 +387,7 @@ const Home = () => {
                   className="max-h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <span className="text-xs font-bold text-gray-800 group-hover:text-[#4F46E5] transition-colors duration-200 uppercase tracking-wide">
+              <span className="text-xs font-bold text-gray-800 group-hover:text-primary transition-colors duration-200 uppercase tracking-wide">
                 {cat.name}
               </span>
             </Link>
@@ -328,14 +399,14 @@ const Home = () => {
       <div className="max-w-6xl mx-auto px-6 w-full mb-28">
         <div className="flex items-center justify-between mb-8">
           <div className="text-left">
-            <h2 className="text-3xl font-extrabold tracking-tight m-0" style={{ color: '#0F0F17' }}>
+            <h2 className="text-3xl font-extrabold tracking-tight m-0" style={{ color: 'var(--color-textCharcoal)' }}>
               Featured Premium Listings
             </h2>
             <p className="text-gray-500 mt-2 m-0 text-sm">
               Explore our handpicked curation of highly-inspected luxury performance cars.
             </p>
           </div>
-          <Link to="/browse" className="text-sm font-bold text-[#4F46E5] hover:underline">
+          <Link to="/browse" className="text-sm font-bold text-primary hover:underline">
             View All Listings &rarr;
           </Link>
         </div>
@@ -355,11 +426,11 @@ const Home = () => {
           <div className="absolute inset-0 bg-[radial-gradient(#4F46E506_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-60" />
           
           <div className="relative z-10">
-            <span className="text-[#4F46E5] text-xs font-bold uppercase tracking-[0.2em]">
+            <span className="text-primary text-xs font-bold uppercase tracking-[0.2em]">
               The Valora Promise
             </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold mt-4 mb-12 leading-tight max-w-2xl" style={{ color: '#0F0F17' }}>
-              Four checks. <span className="text-[#4F46E5]">Every car.</span> Before you call.
+            <h2 className="text-3xl md:text-5xl font-extrabold mt-4 mb-12 leading-tight max-w-2xl" style={{ color: 'var(--color-textCharcoal)' }}>
+              Four checks. <span className="text-primary">Every car.</span> Before you call.
             </h2>
 
             {/* Promises Grid */}
@@ -388,7 +459,7 @@ const Home = () => {
               ].map((item, idx) => (
                 <div key={idx} className="p-8 flex flex-col justify-between min-h-[220px]">
                   <div>
-                    <span className="text-[#4F46E5] text-xs font-mono font-bold block mb-4">
+                    <span className="text-primary text-xs font-mono font-bold block mb-4">
                       {item.num}
                     </span>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -398,7 +469,7 @@ const Home = () => {
                       {item.desc}
                     </p>
                   </div>
-                  <div className="w-8 h-[2px] bg-[#4F46E5]/40 mt-6" />
+                  <div className="w-8 h-[2px] bg-primary/40 mt-6" />
                 </div>
               ))}
             </div>
@@ -408,11 +479,11 @@ const Home = () => {
 
       {/* How it Works Section */}
       <div className="max-w-6xl mx-auto px-6 w-full mb-28 text-left">
-        <span className="text-[#4F46E5] text-xs font-bold uppercase tracking-[0.2em] block mb-3">
+        <span className="text-primary text-xs font-bold uppercase tracking-[0.2em] block mb-3">
           How It Works
         </span>
-        <h2 className="text-3xl md:text-5xl font-extrabold mt-0 mb-4 leading-tight" style={{ color: '#0F0F17' }}>
-          From search to signature, in <span className="text-[#4F46E5]">three quiet steps.</span>
+        <h2 className="text-3xl md:text-5xl font-extrabold mt-0 mb-4 leading-tight" style={{ color: 'var(--color-textCharcoal)' }}>
+          From search to signature, in <span className="text-primary">three quiet steps.</span>
         </h2>
         <p className="text-gray-500 text-sm md:text-base max-w-xl leading-relaxed mt-0 mb-12">
           No cold calls, no dealer bidding wars. Just a straight line to the right car.
@@ -431,7 +502,7 @@ const Home = () => {
                   <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center font-bold text-sm text-gray-500 bg-gray-50/80">
                     1
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-[#0B655F] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-tealPrimary flex items-center justify-center">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -444,7 +515,7 @@ const Home = () => {
                   Filter by brand, budget, year, or location. Every listing is pre-evaluated by Valora's pricing, condition, and fraud verification models.
                 </p>
               </div>
-              <Link to="/browse" className="text-sm font-bold text-[#0B655F] hover:underline inline-flex items-center gap-1 mt-6">
+              <Link to="/browse" className="text-sm font-bold text-tealPrimary hover:underline inline-flex items-center gap-1 mt-6">
                 Start searching &rarr;
               </Link>
             </div>
@@ -456,7 +527,7 @@ const Home = () => {
                   <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center font-bold text-sm text-gray-500 bg-gray-50/80">
                     2
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-[#0B655F] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-tealPrimary flex items-center justify-center">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
                     </svg>
@@ -469,7 +540,7 @@ const Home = () => {
                   Deep-dive into any car's 0–100 Trust Score. Compare the predicted fair price range against the seller's price, and view CNN visual condition logs.
                 </p>
               </div>
-              <Link to="/browse" className="text-sm font-bold text-[#0B655F] hover:underline inline-flex items-center gap-1 mt-6">
+              <Link to="/browse" className="text-sm font-bold text-tealPrimary hover:underline inline-flex items-center gap-1 mt-6">
                 Try Compare &rarr;
               </Link>
             </div>
@@ -481,7 +552,7 @@ const Home = () => {
                   <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center font-bold text-sm text-gray-500 bg-gray-50/80">
                     3
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-[#0B655F] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-[#E6F4F2] text-tealPrimary flex items-center justify-center">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -494,7 +565,7 @@ const Home = () => {
                   Message verified sellers directly through our secure chat system. Agree on a price, ask questions, or book an inspection with zero middleman markup.
                 </p>
               </div>
-              <Link to="/browse" className="text-sm font-bold text-[#0B655F] hover:underline inline-flex items-center gap-1 mt-6">
+              <Link to="/browse" className="text-sm font-bold text-tealPrimary hover:underline inline-flex items-center gap-1 mt-6">
                 Contact sellers &rarr;
               </Link>
             </div>
@@ -513,20 +584,20 @@ const Home = () => {
             <div className="lg:col-span-5 space-y-6">
               <div className="space-y-3">
                 {/* Horizontal line decorator above label */}
-                <div className="w-10 h-[3px] bg-[#4F46E5]" />
-                <span className="text-[#4F46E5] text-[11px] font-extrabold uppercase tracking-[0.2em] block">
+                <div className="w-10 h-[3px] bg-primary" />
+                <span className="text-primary text-[11px] font-extrabold uppercase tracking-[0.2em] block">
                   Features
                 </span>
               </div>
               <h2 className="text-4xl font-extrabold tracking-tight leading-tight m-0 text-gray-900">
-                Why People <span className="text-[#4F46E5]">Choose Us?</span>
+                Why People <span className="text-primary">Choose Us?</span>
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed m-0">
                 Valora removes the guess-work and hidden fees of pre-owned vehicle buying by running every listing through our advanced machine learning and visual verification models.
               </p>
               <div className="pt-2">
                 <Link to="/browse">
-                  <Button variant="primary" className="py-2.5 px-6 font-bold bg-[#4F46E5] hover:bg-[#3B32C4] text-white border-none rounded-xl shadow-sm text-xs">
+                  <Button variant="primary" className="py-2.5 px-6 font-bold bg-primary hover:bg-primaryDark text-white border-none rounded-xl shadow-sm text-xs">
                     Explore Listings
                   </Button>
                 </Link>
@@ -542,7 +613,7 @@ const Home = () => {
               <div className="space-y-8 md:space-y-10 md:pt-10">
                 {/* Feature 1 */}
                 <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-[#4F46E5] bg-indigo-50/50 flex items-center justify-center shrink-0">
+                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-primary bg-indigo-50/50 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
@@ -562,7 +633,7 @@ const Home = () => {
 
                 {/* Feature 2 */}
                 <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-[#4F46E5] bg-indigo-50/50 flex items-center justify-center shrink-0">
+                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-primary bg-indigo-50/50 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -582,7 +653,7 @@ const Home = () => {
               <div className="space-y-8 md:space-y-10">
                 {/* Feature 3 */}
                 <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-[#4F46E5] bg-indigo-50/50 flex items-center justify-center shrink-0">
+                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-primary bg-indigo-50/50 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
@@ -602,7 +673,7 @@ const Home = () => {
 
                 {/* Feature 4 */}
                 <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-[#4F46E5] bg-indigo-50/50 flex items-center justify-center shrink-0">
+                  <div className="w-11 h-11 rounded-full border border-indigo-100 text-primary bg-indigo-50/50 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
                     </svg>
@@ -632,7 +703,7 @@ const Home = () => {
         <div className="bg-[#F4F4F6] rounded-[24px] md:rounded-[32px] border border-gray-100 p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-visible shadow-sm">
           {/* Left Text */}
           <div className="w-full md:w-[48%] md:max-w-[340px] text-left">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight m-0 mb-3" style={{ color: '#0F0F17' }}>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight m-0 mb-3" style={{ color: 'var(--color-textCharcoal)' }}>
               Sell your car in minutes
             </h2>
             <p className="text-sm m-0 leading-relaxed" style={{ color: '#6B7280' }}>

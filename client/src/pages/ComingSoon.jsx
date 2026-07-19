@@ -11,7 +11,7 @@ const ComingSoon = () => {
 
   return (
     <div className="max-w-md mx-auto py-20 px-6 text-center flex flex-col items-center justify-center min-h-[60vh]">
-      <div className="w-16 h-16 bg-indigo-50 text-[#4F46E5] rounded-2xl flex items-center justify-center mb-6">
+      <div className="w-16 h-16 bg-indigo-50 text-primary rounded-2xl flex items-center justify-center mb-6">
         <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
         </svg>
@@ -23,7 +23,7 @@ const ComingSoon = () => {
         We are building the {formattedTitle.toLowerCase()} feature to connect seamlessly with Valora's trust and valuation engine. Check back soon!
       </p>
       <Link to="/" className="no-underline">
-        <Button variant="primary" className="py-2.5 px-6 font-bold bg-[#4F46E5] rounded-xl shadow-md text-white border-none">
+        <Button variant="primary" className="py-2.5 px-6 font-bold bg-primary rounded-xl shadow-md text-white border-none">
           Go Back Home
         </Button>
       </Link>

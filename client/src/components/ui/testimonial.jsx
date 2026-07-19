@@ -22,7 +22,7 @@ function ClientFeedback() {
   };
 
   return (
-    <main className="w-full bg-[#FAFAFC] py-16">
+    <main className="w-full bg-bgLight py-16">
       <section 
         className="relative h-full max-w-6xl text-black mx-auto py-14 px-6 bg-white border border-gray-100 rounded-2xl shadow-sm" 
         ref={testimonialRef}
@@ -32,7 +32,7 @@ function ClientFeedback() {
           <TimelineContent 
             as="h2" 
             className="text-3xl md:text-4xl font-extrabold tracking-tight m-0 text-center w-full" 
-            style={{ color: '#0F0F17', textAlign: 'center' }}
+            style={{ color: 'var(--color-textCharcoal)', textAlign: 'center' }}
             animationNum={0} 
             customVariants={revealVariants} 
             timelineRef={testimonialRef}

@@ -124,8 +124,19 @@ const getListings = async (req, res, next) => {
     let query = Listing.find(queryObj);
 
     // Sorting
-    if (req.query.sort === 'trustScore') {
-      query = query.sort({ trustScore: -1, createdAt: -1 });
+    if (req.query.sort) {
+      if (req.query.sort === 'price') {
+        query = query.sort({ price: 1, createdAt: -1 });
+      } else if (req.query.sort === '-price') {
+        query = query.sort({ price: -1, createdAt: -1 });
+      } else if (req.query.sort === 'trustScore') {
+        query = query.sort({ trustScore: -1, createdAt: -1 });
+      } else if (req.query.sort === 'createdAt') {
+        query = query.sort({ createdAt: 1 });
+      } else {
+        // Includes '-createdAt'
+        query = query.sort({ createdAt: -1 });
+      }
     } else {
       query = query.sort({ createdAt: -1 });
     }

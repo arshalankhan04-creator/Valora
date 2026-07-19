@@ -294,10 +294,10 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden grid lg:grid-cols-2 bg-[#FAFAFC] font-sans">
+    <div className="h-screen w-screen overflow-hidden grid lg:grid-cols-2 bg-bgLight font-sans">
       
       {/* Decorative characters column */}
-      <div className="relative hidden lg:flex flex-col justify-between bg-gradient-to-br from-[#4F46E5]/90 via-[#4F46E5] to-[#3B32C4] p-12 text-white overflow-hidden select-none h-full">
+      <div className="relative hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary/90 via-[#4F46E5] to-primaryDark p-12 text-white overflow-hidden select-none h-full">
         <div className="relative z-20">
           <Link 
             to="/" 
@@ -319,7 +319,7 @@ const Register = () => {
                 left: '70px',
                 width: '180px',
                 height: (isTyping || (password.length > 0 && !showPassword)) ? '440px' : '400px',
-                backgroundColor: '#6C3FF5',
+                backgroundColor: 'var(--color-socialIndigo)',
                 borderRadius: '10px 10px 0 0',
                 zIndex: 1,
                 transform: (password.length > 0 && showPassword)
@@ -342,7 +342,7 @@ const Register = () => {
                   pupilSize={7} 
                   maxDistance={5} 
                   eyeColor="white" 
-                  pupilColor="#2D2D2D" 
+                  pupilColor='var(--color-animCharcoal)' 
                   isBlinking={isPurpleBlinking}
                   forceLookX={(password.length > 0 && showPassword) ? (isPurplePeeking ? 4 : -4) : isLookingAtEachOther ? 3 : undefined}
                   forceLookY={(password.length > 0 && showPassword) ? (isPurplePeeking ? 5 : -4) : isLookingAtEachOther ? 4 : undefined}
@@ -352,7 +352,7 @@ const Register = () => {
                   pupilSize={7} 
                   maxDistance={5} 
                   eyeColor="white" 
-                  pupilColor="#2D2D2D" 
+                  pupilColor='var(--color-animCharcoal)' 
                   isBlinking={isPurpleBlinking}
                   forceLookX={(password.length > 0 && showPassword) ? (isPurplePeeking ? 4 : -4) : isLookingAtEachOther ? 3 : undefined}
                   forceLookY={(password.length > 0 && showPassword) ? (isPurplePeeking ? 5 : -4) : isLookingAtEachOther ? 4 : undefined}
@@ -368,7 +368,7 @@ const Register = () => {
                 left: '240px',
                 width: '120px',
                 height: '310px',
-                backgroundColor: '#2D2D2D',
+                backgroundColor: 'var(--color-animCharcoal)',
                 borderRadius: '8px 8px 0 0',
                 zIndex: 2,
                 transform: (password.length > 0 && showPassword)
@@ -393,7 +393,7 @@ const Register = () => {
                   pupilSize={6} 
                   maxDistance={4} 
                   eyeColor="white" 
-                  pupilColor="#2D2D2D" 
+                  pupilColor='var(--color-animCharcoal)' 
                   isBlinking={isBlackBlinking}
                   forceLookX={(password.length > 0 && showPassword) ? -4 : isLookingAtEachOther ? 0 : undefined}
                   forceLookY={(password.length > 0 && showPassword) ? -4 : isLookingAtEachOther ? -4 : undefined}
@@ -403,7 +403,7 @@ const Register = () => {
                   pupilSize={6} 
                   maxDistance={4} 
                   eyeColor="white" 
-                  pupilColor="#2D2D2D" 
+                  pupilColor='var(--color-animCharcoal)' 
                   isBlinking={isBlackBlinking}
                   forceLookX={(password.length > 0 && showPassword) ? -4 : isLookingAtEachOther ? 0 : undefined}
                   forceLookY={(password.length > 0 && showPassword) ? -4 : isLookingAtEachOther ? -4 : undefined}
@@ -420,7 +420,7 @@ const Register = () => {
                 width: '240px',
                 height: '200px',
                 zIndex: 3,
-                backgroundColor: '#FF9B6B',
+                backgroundColor: 'var(--color-animOrange)',
                 borderRadius: '120px 120px 0 0',
                 transform: (password.length > 0 && showPassword) ? `skewX(0deg)` : `skewX(${orangePos.bodySkew || 0}deg)`,
                 transformOrigin: 'bottom center',
@@ -433,8 +433,8 @@ const Register = () => {
                   top: (password.length > 0 && showPassword) ? `${85}px` : `${90 + (orangePos.faceY || 0)}px`,
                 }}
               >
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={12} maxDistance={5} pupilColor='var(--color-animCharcoal)' forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={12} maxDistance={5} pupilColor='var(--color-animCharcoal)' forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
               </div>
             </div>
 
@@ -446,7 +446,7 @@ const Register = () => {
                 left: '310px',
                 width: '140px',
                 height: '230px',
-                backgroundColor: '#E8D754',
+                backgroundColor: 'var(--color-animYellow)',
                 borderRadius: '70px 70px 0 0',
                 zIndex: 4,
                 transform: (password.length > 0 && showPassword) ? `skewX(0deg)` : `skewX(${yellowPos.bodySkew || 0}deg)`,
@@ -460,11 +460,11 @@ const Register = () => {
                   top: (password.length > 0 && showPassword) ? `${35}px` : `${40 + (yellowPos.faceY || 0)}px`,
                 }}
               >
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={12} maxDistance={5} pupilColor='var(--color-animCharcoal)' forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={12} maxDistance={5} pupilColor='var(--color-animCharcoal)' forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
               </div>
               <div 
-                className="absolute w-12 h-[4px] bg-[#2D2D2D] rounded-full transition-all duration-200 ease-out"
+                className="absolute w-12 h-[4px] bg-animCharcoal rounded-full transition-all duration-200 ease-out"
                 style={{
                   left: (password.length > 0 && showPassword) ? `${20}px` : `${52 + (yellowPos.faceX || 0)}px`,
                   top: (password.length > 0 && showPassword) ? `${88}px` : `${88 + (yellowPos.faceY || 0)}px`,
@@ -494,7 +494,7 @@ const Register = () => {
             <Link 
               to="/" 
               className="text-2xl no-underline tracking-wide block"
-              style={{ fontFamily: 'Anoxic, sans-serif', color: '#0F0F17', fontWeight: 500 }}
+              style={{ fontFamily: 'Anoxic, sans-serif', color: 'var(--color-textCharcoal)', fontWeight: 500 }}
             >
               Valora
             </Link>
@@ -535,7 +535,7 @@ const Register = () => {
                 onChange={(e) => setName(e.target.value)}
                 onFocus={() => setIsTyping(true)}
                 onBlur={() => setIsTyping(false)}
-                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-[#4F46E5] transition-all"
+                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
               />
             </div>
 
@@ -550,7 +550,7 @@ const Register = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 onFocus={() => setIsTyping(true)}
                 onBlur={() => setIsTyping(false)}
-                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-[#4F46E5] transition-all"
+                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
               />
             </div>
 
@@ -563,7 +563,7 @@ const Register = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-11 pl-4 pr-10 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-[#4F46E5] transition-all"
+                  className="w-full h-11 pl-4 pr-10 rounded-xl border border-gray-200 bg-slate-50/50 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                 />
                 <button
                   type="button"
@@ -590,7 +590,7 @@ const Register = () => {
               <div className="grid grid-cols-2 gap-4">
                 <label className={`flex items-center justify-center py-2.5 px-4 border rounded-xl cursor-pointer transition-all font-bold text-xs ${
                   role === 'buyer'
-                    ? 'border-[#4F46E5] bg-indigo-50/20 text-[#4F46E5] font-black'
+                    ? 'border-primary bg-indigo-50/20 text-primary font-black'
                     : 'border-gray-200 text-gray-500 hover:bg-slate-50'
                 }`}>
                   <input
@@ -605,7 +605,7 @@ const Register = () => {
                 </label>
                 <label className={`flex items-center justify-center py-2.5 px-4 border rounded-xl cursor-pointer transition-all font-bold text-xs ${
                   role === 'seller'
-                    ? 'border-[#4F46E5] bg-indigo-50/20 text-[#4F46E5] font-black'
+                    ? 'border-primary bg-indigo-50/20 text-primary font-black'
                     : 'border-gray-200 text-gray-500 hover:bg-slate-50'
                 }`}>
                   <input
@@ -625,7 +625,7 @@ const Register = () => {
               type="submit" 
               disabled={loading}
               id="register-submit"
-              className="w-full h-12 text-sm font-bold text-white bg-[#4F46E5] hover:bg-[#3B32C4] rounded-xl cursor-pointer transition-colors shadow-sm focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 text-sm font-bold text-white bg-primary hover:bg-primaryDark rounded-xl cursor-pointer transition-colors shadow-sm focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Creating account..." : "Register"}
             </button>
@@ -633,7 +633,7 @@ const Register = () => {
 
           <div className="text-center text-xs font-semibold text-gray-400 mt-6 select-none">
             Already have an account?{" "}
-            <Link to="/login" className="text-[#4F46E5] font-extrabold hover:underline">
+            <Link to="/login" className="text-primary font-extrabold hover:underline">
               Log In
             </Link>
           </div>

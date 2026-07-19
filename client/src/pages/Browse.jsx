@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import Button from '../components/Button';
 import CarCard from '../components/CarCard';
 
 const Browse = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [listings, setListings] = useState([]);
   const [availableBrands, setAvailableBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Filter States
-  const [selectedBrand, setSelectedBrand] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [minYear, setMinYear] = useState('');
-  const [maxYear, setMaxYear] = useState('');
-  const [selectedFuels, setSelectedFuels] = useState([]);
-  const [sortBy, setSortBy] = useState('-createdAt'); // Default to newest
+  // Filter States initialized from URL Search Params
+  const [selectedBrand, setSelectedBrand] = useState(searchParams.get('brand') || '');
+  const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
+  const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
+  const [minYear, setMinYear] = useState(searchParams.get('minYear') || '');
+  const [maxYear, setMaxYear] = useState(searchParams.get('maxYear') || '');
+  const [selectedFuels, setSelectedFuels] = useState(
+    searchParams.get('fuelType') ? searchParams.get('fuelType').split(',') : []
+  );
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || '-createdAt');
+  const [selectedModel, setSelectedModel] = useState(searchParams.get('model') || '');
+  const [selectedLocation, setSelectedLocation] = useState(searchParams.get('location') || '');
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +34,22 @@ const Browse = () => {
   for (let y = 2015; y <= 2026; y++) {
     yearsList.push(y);
   }
+
+  // Sync URL search parameters on filter changes
+  useEffect(() => {
+    const params = {};
+    if (selectedBrand) params.brand = selectedBrand;
+    if (minPrice) params.minPrice = minPrice;
+    if (maxPrice) params.maxPrice = maxPrice;
+    if (minYear) params.minYear = minYear;
+    if (maxYear) params.maxYear = maxYear;
+    if (selectedFuels.length > 0) params.fuelType = selectedFuels.join(',');
+    if (sortBy) params.sort = sortBy;
+    if (selectedModel) params.model = selectedModel;
+    if (selectedLocation) params.location = selectedLocation;
+    
+    setSearchParams(params, { replace: true });
+  }, [selectedBrand, minPrice, maxPrice, minYear, maxYear, selectedFuels, sortBy, selectedModel, selectedLocation]);
 
   // Fetch unique brands on mount
   useEffect(() => {
@@ -58,7 +80,23 @@ const Browse = () => {
       if (sortBy) params.sort = sortBy;
 
       const res = await api.get('/listings', { params });
-      setListings(res.data);
+      let filtered = res.data;
+
+      // Client-side fallback filter for Model and Location
+      if (selectedModel) {
+        filtered = filtered.filter(item => 
+          item.model.toLowerCase().includes(selectedModel.toLowerCase()) || 
+          (item.description && item.description.toLowerCase().includes(selectedModel.toLowerCase()))
+        );
+      }
+
+      if (selectedLocation) {
+        filtered = filtered.filter(item => 
+          item.description && item.description.toLowerCase().includes(selectedLocation.toLowerCase())
+        );
+      }
+
+      setListings(filtered);
       setCurrentPage(1); // Reset to first page when query changes
     } catch (err) {
       console.error('Error fetching listings:', err);
@@ -75,7 +113,7 @@ const Browse = () => {
     }, 200);
 
     return () => clearTimeout(timer);
-  }, [selectedBrand, minPrice, maxPrice, minYear, maxYear, selectedFuels, sortBy]);
+  }, [selectedBrand, minPrice, maxPrice, minYear, maxYear, selectedFuels, sortBy, selectedModel, selectedLocation]);
 
   // Reset Filters
   const handleResetFilters = () => {
@@ -86,6 +124,8 @@ const Browse = () => {
     setMaxYear('');
     setSelectedFuels([]);
     setSortBy('-createdAt');
+    setSelectedModel('');
+    setSelectedLocation('');
   };
 
   // Fuel Checkbox Change
@@ -120,7 +160,7 @@ const Browse = () => {
   };
 
   return (
-    <div className="w-full bg-[#FAFAFC] min-h-screen py-12 flex flex-col font-sans">
+    <div className="w-full bg-bgLight min-h-screen py-12 flex flex-col font-sans">
       <div className="max-w-6xl mx-auto px-6 w-full text-left">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
@@ -132,7 +172,7 @@ const Browse = () => {
               </h2>
               <button
                 onClick={handleResetFilters}
-                className="text-xs font-bold text-[#4F46E5] hover:text-[#3B32C4] bg-transparent border-none cursor-pointer hover:underline transition-colors"
+                className="text-xs font-bold text-primary hover:text-primaryDark bg-transparent border-none cursor-pointer hover:underline transition-colors"
               >
                 Reset All
               </button>
@@ -150,7 +190,7 @@ const Browse = () => {
                 <select
                   value={selectedBrand}
                   onChange={(e) => setSelectedBrand(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] cursor-pointer"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                 >
                   <option value="">All Brands</option>
                   {availableBrands.map((brand) => (
@@ -170,7 +210,7 @@ const Browse = () => {
                     Trust Score
                   </label>
                   <span className="text-[10px] font-extrabold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                    Coming Soon
+                    N/A
                   </span>
                 </div>
                 <input
@@ -181,7 +221,7 @@ const Browse = () => {
                   className="w-full accent-gray-300 cursor-not-allowed opacity-60"
                 />
                 <span className="text-[9px] text-gray-400 italic mt-1 block">
-                  Requires ML verification model connection
+                  Trust score filtering currently N/A (requires ML verification model)
                 </span>
               </div>
 
@@ -198,7 +238,7 @@ const Browse = () => {
                     placeholder="Min ₹"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                   <span className="text-gray-400 text-xs font-bold">to</span>
                   <input
@@ -206,7 +246,7 @@ const Browse = () => {
                     placeholder="Max ₹"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
@@ -222,7 +262,7 @@ const Browse = () => {
                   <select
                     value={minYear}
                     onChange={(e) => setMinYear(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] cursor-pointer"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                   >
                     <option value="">Min</option>
                     {yearsList.map((y) => (
@@ -235,7 +275,7 @@ const Browse = () => {
                   <select
                     value={maxYear}
                     onChange={(e) => setMaxYear(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] cursor-pointer"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                   >
                     <option value="">Max</option>
                     {yearsList.map((y) => (
@@ -261,19 +301,56 @@ const Browse = () => {
                         type="checkbox"
                         checked={selectedFuels.includes(fuel)}
                         onChange={() => handleFuelCheckboxChange(fuel)}
-                        className="w-4 h-4 rounded border-gray-300 text-[#4F46E5] focus:ring-[#4F46E5] cursor-pointer"
+                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                       />
                       <span>{fuel}</span>
                     </label>
                   ))}
                 </div>
               </div>
+              {/* Active Custom Filters */}
+              {(selectedModel || selectedLocation) && (
+                <>
+                  <div className="h-[1px] bg-gray-100 w-full" />
+                  <div>
+                    <label className="block text-[10px] font-extrabold tracking-wider text-gray-400 mb-2.5 uppercase">
+                      Active Search Filters
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedModel && (
+                        <span className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-full select-none">
+                          Model: {selectedModel}
+                          <button 
+                            onClick={() => setSelectedModel('')}
+                            type="button" 
+                            className="hover:text-red-500 font-extrabold text-[10px] cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      )}
+                      {selectedLocation && (
+                        <span className="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-100 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-full select-none">
+                          Loc: {selectedLocation}
+                          <button 
+                            onClick={() => setSelectedLocation('')}
+                            type="button" 
+                            className="hover:text-red-500 font-extrabold text-[10px] cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Reset Action Block */}
             <button
               onClick={handleResetFilters}
-              className="w-full py-3 bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100 rounded-xl text-xs font-extrabold text-[#4F46E5] transition-colors cursor-pointer mt-6"
+              className="w-full py-3 bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100 rounded-xl text-xs font-extrabold text-primary transition-colors cursor-pointer mt-6"
             >
               Clear Filters
             </button>
@@ -288,7 +365,7 @@ const Browse = () => {
                 <h2 className="text-xl font-extrabold text-gray-950 m-0">
                   Search Results
                 </h2>
-                <span className="text-[10px] font-bold bg-indigo-50 text-[#4F46E5] border border-indigo-100 px-2.5 py-1 rounded-full select-none">
+                <span className="text-[10px] font-bold bg-indigo-50 text-primary border border-indigo-100 px-2.5 py-1 rounded-full select-none">
                   {listings.length} Matches
                 </span>
               </div>
@@ -302,7 +379,7 @@ const Browse = () => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-xs font-extrabold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] cursor-pointer shadow-sm appearance-none"
+                    className="bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2 text-xs font-extrabold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-sm appearance-none"
                   >
                     <option value="-createdAt">Newest</option>
                     <option value="price">Price: Low to High</option>
@@ -338,7 +415,7 @@ const Browse = () => {
                 <p className="text-gray-400 text-xs leading-relaxed max-w-[280px] mx-auto m-0 mb-4">
                   Try widening your price range, checking other brands, or clearing some filters.
                 </p>
-                <Button onClick={handleResetFilters} variant="primary" className="py-2 px-5 text-xs font-bold bg-[#4F46E5]">
+                <Button onClick={handleResetFilters} variant="primary" className="py-2 px-5 text-xs font-bold bg-primary">
                   Reset All Filters
                 </Button>
               </div>
@@ -386,8 +463,8 @@ const Browse = () => {
                             onClick={() => setCurrentPage(pageNum)}
                             className={`w-9 h-9 rounded-xl text-sm font-extrabold flex items-center justify-center cursor-pointer transition-colors border-none focus:outline-none ${
                               currentPage === pageNum
-                                ? 'bg-[#4F46E5] text-white shadow-sm'
-                                : 'bg-transparent text-gray-600 hover:text-[#4F46E5]'
+                                ? 'bg-primary text-white shadow-sm'
+                                : 'bg-transparent text-gray-600 hover:text-primary'
                             }`}
                           >
                             {pageNum}

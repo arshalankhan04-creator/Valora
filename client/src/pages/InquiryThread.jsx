@@ -67,7 +67,7 @@ const InquiryThread = () => {
 
   if (authLoading) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
+      <div className="w-full bg-bgLight min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 border-4 border-indigo-100 border-t-[#4F46E5] rounded-full animate-spin" />
         <p className="text-gray-400 text-xs font-bold m-0">Loading authentication status...</p>
       </div>
@@ -76,7 +76,7 @@ const InquiryThread = () => {
 
   if (!user) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
+      <div className="w-full bg-bgLight min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
         <div className="w-16 h-16 bg-red-50 border border-red-100 rounded-full flex items-center justify-center mb-4">
           <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -86,7 +86,7 @@ const InquiryThread = () => {
         <p className="text-gray-400 text-xs max-w-[320px] mx-auto m-0 mb-6">
           Please log in to view this message thread.
         </p>
-        <Link to="/login" className="text-xs font-bold text-[#4F46E5] hover:underline">
+        <Link to="/login" className="text-xs font-bold text-primary hover:underline">
           Go to Login
         </Link>
       </div>
@@ -95,7 +95,7 @@ const InquiryThread = () => {
 
   if (loading) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
+      <div className="w-full bg-bgLight min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 border-4 border-indigo-100 border-t-[#4F46E5] rounded-full animate-spin" />
         <p className="text-gray-400 text-xs font-bold m-0">Loading message thread...</p>
       </div>
@@ -104,7 +104,7 @@ const InquiryThread = () => {
 
   if (error || !thread) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
+      <div className="w-full bg-bgLight min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
         <div className="w-16 h-16 bg-red-50 border border-red-100 rounded-full flex items-center justify-center mb-4">
           <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -114,7 +114,7 @@ const InquiryThread = () => {
         <p className="text-red-655 text-xs max-w-[320px] mx-auto m-0 mb-6 font-bold">
           {error || 'You are not authorized to view this conversation.'}
         </p>
-        <Link to="/inquiries" className="text-xs font-bold text-[#4F46E5] hover:underline">
+        <Link to="/inquiries" className="text-xs font-bold text-primary hover:underline">
           &larr; Back to Inbox
         </Link>
       </div>
@@ -152,7 +152,7 @@ const InquiryThread = () => {
   let lastDateStr = null;
 
   return (
-    <div className="w-full bg-[#FAFAFC] min-h-[calc(100vh-80px)] py-10 flex flex-col font-sans">
+    <div className="w-full bg-bgLight min-h-[calc(100vh-80px)] py-10 flex flex-col font-sans">
       <div className="max-w-6xl mx-auto px-6 w-full text-left flex-1 flex flex-col">
 
         {/* Title bar */}
@@ -169,7 +169,7 @@ const InquiryThread = () => {
           <div className="md:col-span-4 border-r border-gray-100 flex flex-col h-full bg-white">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between select-none">
               <h2 className="text-sm font-black text-gray-900 m-0">Inbox</h2>
-              <span className="text-[10px] font-extrabold bg-indigo-50 text-[#4F46E5] border border-indigo-100 px-2.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-extrabold bg-indigo-50 text-primary border border-indigo-100 px-2.5 py-0.5 rounded-full">
                 {threads.length} {threads.length === 1 ? 'Thread' : 'Threads'}
               </span>
             </div>
@@ -196,11 +196,11 @@ const InquiryThread = () => {
                   <div
                     key={item._id}
                     onClick={() => navigate(`/inquiries/${item._id}`)}
-                    className={`p-4 hover:bg-slate-50/70 cursor-pointer transition-colors relative flex items-start gap-3 text-left ${isActive ? 'bg-indigo-50/30 border-l-[3px] border-[#4F46E5]' : ''
+                    className={`p-4 hover:bg-slate-50/70 cursor-pointer transition-colors relative flex items-start gap-3 text-left ${isActive ? 'bg-indigo-50/30 border-l-[3px] border-primary' : ''
                       }`}
                   >
                     {/* Avatar initials */}
-                    <div className="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-100 text-[#4F46E5] flex items-center justify-center font-extrabold text-xs uppercase flex-shrink-0 select-none shadow-sm">
+                    <div className="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-100 text-primary flex items-center justify-center font-extrabold text-xs uppercase flex-shrink-0 select-none shadow-sm">
                       {itemOtherPartyName.split(' ').slice(0, 2).map(n => n[0]).join('')}
                     </div>
 
@@ -254,13 +254,13 @@ const InquiryThread = () => {
                         {thread.listing.brand} {thread.listing.model} ({thread.listing.year})
                       </div>
                       <div className="flex items-center mt-0.5 leading-none">
-                        <span className="text-[10px] font-extrabold text-[#0B655F]">
+                        <span className="text-[10px] font-extrabold text-tealPrimary">
                           ₹{(thread.listing.price / 100000).toFixed(1)}L
                         </span>
                         <span className="text-gray-300 mx-1.5 select-none">·</span>
                         <Link
                           to={`/listings/${thread.listing._id}`}
-                          className="text-[9px] font-extrabold text-[#4F46E5] hover:underline transition-all"
+                          className="text-[9px] font-extrabold text-primary hover:underline transition-all"
                         >
                           View Listing
                         </Link>
@@ -275,10 +275,10 @@ const InquiryThread = () => {
               <div className="flex items-center gap-2 select-none flex-shrink-0 opacity-60">
                 <div className="flex flex-col items-end text-right">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none">Trust Score</span>
-                  <span className="text-[8px] text-gray-400 italic mt-0.5 leading-none">Coming Soon</span>
+                  <span className="text-[8px] text-gray-400 italic mt-0.5 leading-none">N/A</span>
                 </div>
                 <div className="w-9 h-9 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50/50">
-                  <span className="text-[9px] font-extrabold text-gray-400">--</span>
+                  <span className="text-[9px] font-extrabold text-gray-400">N/A</span>
                 </div>
               </div>
             </div>
@@ -320,7 +320,7 @@ const InquiryThread = () => {
                           )}
                           <div
                             className={`px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-sm leading-relaxed whitespace-pre-wrap select-text text-left relative pb-7 pr-14 min-w-[100px] ${isMe
-                              ? 'bg-[#0B655F] text-white rounded-tr-none'
+                              ? 'bg-tealPrimary text-white rounded-tr-none'
                               : 'bg-white border border-gray-100 text-gray-800 rounded-tl-none'
                               }`}
                           >
@@ -376,7 +376,7 @@ const InquiryThread = () => {
                   <button
                     type="submit"
                     disabled={replyLoading}
-                    className="w-8 h-8 rounded-full bg-[#0B655F] hover:bg-[#09524D] text-white flex items-center justify-center cursor-pointer transition-colors border-none disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 focus:outline-none shadow-sm"
+                    className="w-8 h-8 rounded-full bg-tealPrimary hover:bg-tealDark text-white flex items-center justify-center cursor-pointer transition-colors border-none disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 focus:outline-none shadow-sm"
                   >
                     <svg className="w-4 h-4 transform rotate-45 -translate-x-[1px] translate-y-[0.5px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

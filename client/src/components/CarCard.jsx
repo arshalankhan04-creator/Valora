@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
+import { useAuth } from '../context/AuthContext';
 
 const CarCard = ({ car }) => {
   // Handle image URL
@@ -56,6 +57,10 @@ const CarCard = ({ car }) => {
   // Handle target ID
   const targetId = car.id || car._id;
 
+  const { token, wishlist, toggleWishlist } = useAuth();
+  const navigate = useNavigate();
+  const isSaved = wishlist.includes(targetId);
+
   return (
     <Link 
       to={`/listings/${targetId}`} 
@@ -83,17 +88,29 @@ const CarCard = ({ car }) => {
         <button 
           onClick={(e) => {
             e.preventDefault(); // Don't trigger link navigation
+            e.stopPropagation();
+            if (!token) {
+              navigate('/login');
+            } else {
+              toggleWishlist(targetId);
+            }
           }}
           className="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md cursor-pointer hover:scale-110 transition-transform duration-200 border border-gray-50 focus:outline-none z-10"
         >
-          <svg className="w-5 h-5 text-[#0B655F]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          <svg 
+            className={`w-5 h-5 transition-colors ${isSaved ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'}`} 
+            viewBox="0 0 24 24" 
+            fill={isSaved ? 'currentColor' : 'none'} 
+            stroke="currentColor" 
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
 
         {/* Trust Score Badge (Bottom-Right) */}
         <div className="absolute bottom-3 right-3 bg-white px-3 py-1.5 rounded-[12px] shadow-lg flex items-center gap-2 border border-slate-50/50 z-10 select-none">
-          <div className="w-7 h-7 rounded-full border-2 border-[#0B655F] flex items-center justify-center text-[11px] font-black text-[#0B655F]">
+          <div className="w-7 h-7 rounded-full border-2 border-tealPrimary flex items-center justify-center text-[11px] font-black text-tealPrimary">
             {displayTrustScore}
           </div>
           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
@@ -105,7 +122,7 @@ const CarCard = ({ car }) => {
       {/* Details Section */}
       <div className="p-4 flex flex-col flex-1 text-left">
         {/* Title */}
-        <h4 className="text-lg font-bold text-[#0F0F17] m-0 tracking-tight truncate leading-snug">
+        <h4 className="text-lg font-bold text-textCharcoal m-0 tracking-tight truncate leading-snug">
           {car.year} {car.brand} {car.model}
         </h4>
 
@@ -175,7 +192,7 @@ const CarCard = ({ car }) => {
           </span>
           <Button 
             variant="primary" 
-            className="px-4 py-1.5 text-xs font-bold text-white bg-[#0B655F] hover:bg-[#09524D] rounded-[8px] transition-colors border-none"
+            className="px-4 py-1.5 text-xs font-bold text-white bg-tealPrimary hover:bg-tealDark rounded-[8px] transition-colors border-none"
           >
             View Details
           </Button>

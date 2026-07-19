@@ -5,8 +5,9 @@ import api from '../api/axios';
 
 const ListingDetail = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, token, wishlist, toggleWishlist } = useAuth();
   const navigate = useNavigate();
+  const isSaved = wishlist && wishlist.includes(id);
   
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +64,7 @@ const ListingDetail = () => {
 
   if (loading) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
+      <div className="w-full bg-bgLight min-h-screen py-24 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 border-4 border-indigo-100 border-t-[#4F46E5] rounded-full animate-spin" />
         <p className="text-gray-400 text-xs font-bold m-0">Loading vehicle details...</p>
       </div>
@@ -72,7 +73,7 @@ const ListingDetail = () => {
 
   if (error || !listing) {
     return (
-      <div className="w-full bg-[#FAFAFC] min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
+      <div className="w-full bg-bgLight min-h-screen py-20 text-center flex flex-col items-center justify-center px-6">
         <div className="w-16 h-16 bg-red-50 border border-red-100 rounded-full flex items-center justify-center mb-4">
           <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -82,7 +83,7 @@ const ListingDetail = () => {
         <p className="text-gray-400 text-xs max-w-[320px] mx-auto m-0 mb-6">
           The listing may have been marked as sold, removed by the owner, or is invalid.
         </p>
-        <Link to="/" className="text-xs font-bold text-[#4F46E5] hover:underline">
+        <Link to="/" className="text-xs font-bold text-primary hover:underline">
           &larr; Back to Browse Listings
         </Link>
       </div>
@@ -168,7 +169,7 @@ const ListingDetail = () => {
   const galleryImages = getGalleryImages();
 
   return (
-    <div className="w-full bg-[#FAFAFC] min-h-screen py-12 flex flex-col font-sans">
+    <div className="w-full bg-bgLight min-h-screen py-12 flex flex-col font-sans">
       <div className="max-w-6xl mx-auto px-6 w-full text-left">
         
         {/* Breadcrumb Navigation */}
@@ -224,7 +225,7 @@ const ListingDetail = () => {
                       key={idx}
                       onClick={() => setActiveImageIdx(idx)}
                       className={`w-20 h-14 rounded-xl overflow-hidden border-2 bg-gray-50 flex-shrink-0 transition-all focus:outline-none relative ${
-                        activeImageIdx === idx ? 'border-[#4F46E5] scale-95 shadow-sm' : 'border-transparent hover:border-gray-300'
+                        activeImageIdx === idx ? 'border-primary scale-95 shadow-sm' : 'border-transparent hover:border-gray-300'
                       }`}
                     >
                       <img src={img} className="w-full h-full object-cover" alt="thumbnail" />
@@ -265,17 +266,17 @@ const ListingDetail = () => {
               <div className="flex flex-col items-center select-none flex-shrink-0">
                 {listing.trustScore !== null && listing.trustScore !== undefined ? (
                   <>
-                    <div className="w-12 h-12 rounded-full border-4 border-[#0B655F] flex items-center justify-center bg-emerald-50/10">
-                      <span className="text-sm font-black text-[#0B655F] leading-none">{listing.trustScore}</span>
+                    <div className="w-12 h-12 rounded-full border-4 border-tealPrimary flex items-center justify-center bg-emerald-50/10">
+                      <span className="text-sm font-black text-tealPrimary leading-none">{listing.trustScore}</span>
                     </div>
                     <span className="text-[8px] font-black text-gray-400 mt-1 uppercase tracking-widest">TRUST SCORE</span>
                   </>
                 ) : (
                   <>
                     <div className="w-12 h-12 rounded-full border-4 border-dashed border-gray-250 flex items-center justify-center bg-gray-50/50">
-                      <span className="text-xs font-extrabold text-gray-400 leading-none">--</span>
+                      <span className="text-xs font-extrabold text-gray-400 leading-none">N/A</span>
                     </div>
-                    <span className="text-[8px] font-black text-gray-400 mt-1 uppercase tracking-widest">Score Pending</span>
+                    <span className="text-[8px] font-black text-gray-400 mt-1 uppercase tracking-widest">TRUST SCORE</span>
                   </>
                 )}
               </div>
@@ -334,7 +335,7 @@ const ListingDetail = () => {
               <div className="flex items-center justify-between mb-4 select-none">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">AI Estimated Value</span>
                 {listing.predictedPriceMin !== null ? (
-                  <span className="text-[10px] font-bold bg-[#EAFBF3] text-[#0B655F] border border-[#D1F7E4] px-2.5 py-1 rounded-full">
+                  <span className="text-[10px] font-bold bg-[#EAFBF3] text-tealPrimary border border-[#D1F7E4] px-2.5 py-1 rounded-full">
                     Fair Price
                   </span>
                 ) : (
@@ -384,7 +385,7 @@ const ListingDetail = () => {
               <div className="flex items-center justify-between mb-4 select-none">
                 <h3 className="text-base font-extrabold text-gray-900 m-0">Condition Report</h3>
                 {listing.conditionScore !== null ? (
-                  <span className="text-xs font-extrabold bg-indigo-50 text-[#4F46E5] border border-indigo-100 px-2.5 py-1 rounded-full">
+                  <span className="text-xs font-extrabold bg-indigo-50 text-primary border border-indigo-100 px-2.5 py-1 rounded-full">
                     Score: {listing.conditionScore}/10
                   </span>
                 ) : (
@@ -407,7 +408,7 @@ const ListingDetail = () => {
                 </svg>
 
                 <div className="absolute inset-0 bg-white/80 backdrop-blur-[1.5px] flex flex-col items-center justify-center p-4">
-                  <span className="text-[10px] font-black tracking-widest text-[#4F46E5] bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full shadow-sm mb-2">
+                  <span className="text-[10px] font-black tracking-widest text-primary bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full shadow-sm mb-2">
                     Coming Soon
                   </span>
                   <h4 className="text-xs font-black text-gray-900 m-0 mb-1">CNN Visual Damage Map</h4>
@@ -455,8 +456,8 @@ const ListingDetail = () => {
 
                   <div className="bg-gray-50/50 rounded-xl p-4 text-left select-none">
                     <span className="text-[9px] font-extrabold text-gray-400 uppercase">Seller Identity</span>
-                    <div className="text-xs font-extrabold text-[#4F46E5] mt-1 flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#4F46E5]" />
+                    <div className="text-xs font-extrabold text-primary mt-1 flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                       Verified
                     </div>
                   </div>
@@ -495,7 +496,7 @@ const ListingDetail = () => {
                   </p>
                   <Link 
                     to="/login"
-                    className="inline-block w-full py-3 bg-[#4F46E5] hover:bg-[#3B32C4] text-white text-xs font-extrabold rounded-xl transition-colors text-center no-underline cursor-pointer shadow-sm"
+                    className="inline-block w-full py-3 bg-primary hover:bg-primaryDark text-white text-xs font-extrabold rounded-xl transition-colors text-center no-underline cursor-pointer shadow-sm"
                   >
                     Login to Contact
                   </Link>
@@ -504,7 +505,7 @@ const ListingDetail = () => {
                 <div className="space-y-3">
                   <Link
                     to={`/edit-listing/${id}`}
-                    className="block w-full py-3 bg-[#4F46E5] hover:bg-[#3B32C4] text-white text-xs font-extrabold rounded-xl transition-colors text-center no-underline cursor-pointer shadow-sm"
+                    className="block w-full py-3 bg-primary hover:bg-primaryDark text-white text-xs font-extrabold rounded-xl transition-colors text-center no-underline cursor-pointer shadow-sm"
                   >
                     Edit Listing Details
                   </Link>
@@ -520,7 +521,7 @@ const ListingDetail = () => {
                   {!showContactForm ? (
                     <button
                       onClick={() => setShowContactForm(true)}
-                      className="w-full py-3 bg-[#4F46E5] hover:bg-[#3B32C4] text-white text-xs font-extrabold rounded-xl transition-colors text-center cursor-pointer shadow-sm flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-primary hover:bg-primaryDark text-white text-xs font-extrabold rounded-xl transition-colors text-center cursor-pointer shadow-sm flex items-center justify-center gap-2"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -533,7 +534,7 @@ const ListingDetail = () => {
                       {contactError && <p className="text-red-600 text-[10px] font-bold m-0">{contactError}</p>}
                       <textarea
                         rows="4"
-                        className="w-full bg-white border border-gray-200 rounded-xl p-3 text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] placeholder-gray-400"
+                        className="w-full bg-white border border-gray-200 rounded-xl p-3 text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                         placeholder="Type your message here..."
                         value={messageText}
                         onChange={(e) => setMessageText(e.target.value)}
@@ -544,7 +545,7 @@ const ListingDetail = () => {
                         <button
                           type="submit"
                           disabled={contactLoading}
-                          className="flex-1 py-2.5 bg-[#4F46E5] hover:bg-[#3B32C4] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                          className="flex-1 py-2.5 bg-primary hover:bg-primaryDark text-white text-xs font-bold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                         >
                           {contactLoading ? 'Sending...' : 'Send'}
                         </button>
@@ -561,11 +562,26 @@ const ListingDetail = () => {
                   )}
                   
                   {/* Secondary Save Shortlist Button */}
-                  <button className="w-full py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-extrabold rounded-xl transition-colors text-center cursor-pointer flex items-center justify-center gap-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <button 
+                    onClick={() => {
+                      if (!token) {
+                        navigate('/login');
+                      } else {
+                        toggleWishlist(id);
+                      }
+                    }}
+                    className="w-full py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-extrabold rounded-xl transition-colors text-center cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <svg 
+                      className={`w-4 h-4 transition-colors ${isSaved ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'}`} 
+                      viewBox="0 0 24 24" 
+                      fill={isSaved ? 'currentColor' : 'none'} 
+                      stroke="currentColor" 
+                      strokeWidth="2.5"
+                    >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    Save to Shortlist
+                    {isSaved ? 'Saved in Wishlist' : 'Save to Wishlist'}
                   </button>
                 </div>
               )}
@@ -574,7 +590,7 @@ const ListingDetail = () => {
             {/* Seller Contact Info Card */}
             <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-left">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 text-[#4F46E5] flex items-center justify-center font-extrabold text-sm select-none uppercase shadow-sm">
+                <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 text-primary flex items-center justify-center font-extrabold text-sm select-none uppercase shadow-sm">
                   {(listing.seller?.name || 'S').split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
