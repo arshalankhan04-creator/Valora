@@ -12,6 +12,7 @@ API Contract in Valora_Team_Workflow.md section 8 exactly.
 - phone: String, optional
 - responseRate: Number, default 0
 - pastDealsCount: Number, default 0
+- savedListings: [ObjectId ref 'Listing'], default []
 - timestamps: true (createdAt used as account age for Trust Score)
 
 ## Listing

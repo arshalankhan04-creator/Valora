@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes');
 const listingRoutes = require('./routes/listingRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes');
 
 // Connect to database
 connectDB();
@@ -29,6 +30,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

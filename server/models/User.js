@@ -32,7 +32,12 @@ const UserSchema = new mongoose.Schema({
   pastDealsCount: {
     type: Number,
     default: 0
-  }
+  },
+  savedListings: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Listing',
+    default: []
+  }]
 }, {
   timestamps: true
 });
