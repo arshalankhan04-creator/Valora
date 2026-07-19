@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -22,35 +21,44 @@ const PageWrapper = ({ children }) => (
   </div>
 );
 
+const AppLayout = () => {
+  const location = useLocation();
+  const hideNavFooter = ['/login', '/register'].includes(location.pathname);
+
+  return (
+    <div className="w-full min-h-screen bg-gray-50 flex flex-col">
+      {!hideNavFooter && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/listings/:id" element={<ListingDetail />} />
+        <Route path="/create-listing" element={<PageWrapper><CreateListing /></PageWrapper>} />
+        <Route path="/edit-listing/:id" element={<PageWrapper><EditListing /></PageWrapper>} />
+        <Route path="/inquiries" element={<PageWrapper><Inquiries /></PageWrapper>} />
+        <Route path="/inquiries/:id" element={<PageWrapper><InquiryThread /></PageWrapper>} />
+        <Route path="/my-listings" element={<PageWrapper><MyListings /></PageWrapper>} />
+        <Route path="/admin" element={<PageWrapper><AdminPanel /></PageWrapper>} />
+        
+        {/* Stub/Placeholder Routes */}
+        <Route path="/about" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+        <Route path="/finance" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+        <Route path="/faq" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+        <Route path="/privacy" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+        <Route path="/contact" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+        <Route path="*" element={<PageWrapper><ComingSoon /></PageWrapper>} />
+      </Routes>
+      {!hideNavFooter && <Footer />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="w-full min-h-screen bg-gray-50 flex flex-col">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/browse" element={<PageWrapper><Browse /></PageWrapper>} />
-            <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
-            <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
-            <Route path="/listings/:id" element={<PageWrapper><ListingDetail /></PageWrapper>} />
-            <Route path="/create-listing" element={<PageWrapper><CreateListing /></PageWrapper>} />
-            <Route path="/edit-listing/:id" element={<PageWrapper><EditListing /></PageWrapper>} />
-            <Route path="/inquiries" element={<PageWrapper><Inquiries /></PageWrapper>} />
-            <Route path="/inquiries/:id" element={<PageWrapper><InquiryThread /></PageWrapper>} />
-            <Route path="/my-listings" element={<PageWrapper><MyListings /></PageWrapper>} />
-            <Route path="/admin" element={<PageWrapper><AdminPanel /></PageWrapper>} />
-            
-            {/* Stub/Placeholder Routes */}
-            <Route path="/about" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-            <Route path="/finance" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-            <Route path="/faq" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-            <Route path="/privacy" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-            <Route path="/contact" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-            <Route path="*" element={<PageWrapper><ComingSoon /></PageWrapper>} />
-          </Routes>
-          <Footer />
-        </div>
+        <AppLayout />
       </Router>
     </AuthProvider>
   );

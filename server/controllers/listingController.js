@@ -83,11 +83,28 @@ const getListings = async (req, res, next) => {
     if (req.query.brand) {
       queryObj.brand = { $regex: req.query.brand, $options: 'i' };
     }
-    if (req.query.year) {
+    if (req.query.minYear || req.query.maxYear) {
+      queryObj.year = {};
+      if (req.query.minYear) {
+        queryObj.year.$gte = Number(req.query.minYear);
+      }
+      if (req.query.maxYear) {
+        queryObj.year.$lte = Number(req.query.maxYear);
+      }
+    } else if (req.query.year) {
       queryObj.year = Number(req.query.year);
     }
+
     if (req.query.fuelType) {
-      queryObj.fuelType = req.query.fuelType;
+      const validFuels = ['Petrol', 'Diesel', 'Electric', 'CNG', 'Hybrid'];
+      const fuelTypes = req.query.fuelType
+        .split(',')
+        .map(f => f.trim())
+        .filter(f => f && validFuels.includes(f));
+
+      if (fuelTypes.length > 0) {
+        queryObj.fuelType = { $in: fuelTypes };
+      }
     }
     
     // Price range filtering

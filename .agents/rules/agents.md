@@ -23,73 +23,74 @@ Do not over-engineer: no features, abstractions, or config beyond what I asked f
 If anything is unclear, ambiguous, or you're making an assumption — stop and ask
 me before writing code, rather than guessing.
 
-Always propose an implementation plan and wait for approval before writing
-or modifying BACKEND code (including scaffolding/setup tasks) — this does
-NOT apply to design/styling-only changes, see the Plan Mode section below
-for those.
-
 NEVER run `git commit` or `git push` unless the user explicitly says
 "commit" or "push" in that exact message. Finishing a task, even
 successfully, is never sufficient reason to commit on your own.
 
-## Frontend Design System (in progress — palette NOT locked)
+## Project status (update this as pages get finished — do not treat
+## outdated status notes below as current without checking the actual
+## codebase first)
 
-We are in a static-UI-first design phase. Colors are NOT fixed yet —
-match whatever the current reference image calls for. Font is locked:
-Inter, all weights.
+Backend: Phases A–E complete (Auth, Listings+Images, Inquiries/Chat,
+Admin Panel, Email notifications) — fully built and tested.
 
-Once the full static landing page design is approved, we will extract
-a final palette from what was actually built and lock it at that point.
+Frontend, visually redesigned AND functional (real backend data,
+not static): Home, Browse, Listing Detail, Create/Edit Listing,
+Chat/Inquiries (Inquiries.jsx + InquiryThread.jsx), Admin Panel,
+Seller Dashboard.
+
+Frontend, NOT yet redesigned: Login.jsx, Register.jsx (in progress).
+
+We are past the "static-UI-only" phase. Wiring real backend data into
+a page is now normal and expected, not an exception — the early
+static-first phase applied only to the initial landing-page mockup
+pass and is no longer a blanket rule.
+
+## Frontend Design System
+
+Colors are NOT locked yet — match whatever the current reference image
+calls for per page. Font is locked: Inter, all weights.
 
 Styling rules:
-- Tailwind CSS only, no other CSS frameworks.
+- Tailwind CSS only, no other CSS frameworks. No TypeScript, no
+  shadcn/ui, no Radix UI — plain JavaScript + Tailwind + our own
+  components only.
 - Build every UI element as a reusable component in src/components/
   wherever it will be used more than once (Button, Input, Card, Badge,
-  NavLink, etc.).
+  NavLink, etc.) — reuse existing ones (Button.jsx, CarCard.jsx, etc.)
+  rather than creating parallel/duplicate versions.
 - Before styling a new page/section, ask me whether I have a design
   reference for it.
-- Current phase: STATIC UI ONLY. Use placeholder/dummy data and static
-  markup. Do NOT wire up API calls, backend integration, or real state
-  management during this phase unless explicitly told to. We will
-  integrate with the real backend as a separate phase after the full
-  static design is approved.
 - When a reference design includes a feature we haven't built on the
-  backend yet (e.g. comparison tool, Browse by Brand), build the UI
-  as a visual placeholder — either a disabled-looking element, a
-  "Coming Soon" state, or a link to a stub route — never fake it with
-  hardcoded data that looks live.
+  backend yet (e.g. Trust Score, condition assessment, comparison
+  tool), build the UI as a visual placeholder — a disabled-looking
+  element, greyed out, with a "Coming Soon" label — never fake it with
+  hardcoded data or a realistic-looking number that implies a real
+  computed result.
+- When restyling a page that already has real, working logic
+  (validation, access control, data fetching, business rules), the
+  redesign is a VISUAL change only. Identify every existing functional
+  behavior on that page before restyling, and explicitly preserve it —
+  do not let a visual overhaul silently drop, simplify, or omit
+  functional behavior that already works. If unsure whether something
+  should be preserved, ask rather than dropping it.
 
-## Plan mode — design vs. backend work
-
-For BACKEND or logic changes (API routes, schemas, business logic,
-anything that touches data or state): always propose an implementation
-plan and wait for approval before writing code, as established earlier.
-
-For DESIGN/STYLING-ONLY changes (Tailwind classes, layout, colors,
-static markup, new visual sections): skip the implementation plan step
-entirely — just make the change directly and show me the result. Design
-work is fast to redo and slow to plan-and-approve; the "plan" adds
-friction with no real benefit here since I need to SEE the visual result
-to judge it, not read a description of it.
-
-CRITICAL: For any prompt that begins with "Design-only change" — do NOT
-output an implementation plan under any circumstance. Go straight to
-making the code edit and report what you changed afterward. Producing
-a plan for these prompts is a rule violation.
-
-For backend/logic changes, continue proposing a plan and waiting for
-approval as before.
-
-## Plan Mode (single source of truth — supersedes any other planning
-instruction in this file)
+## Plan Mode (single source of truth)
 
 - BACKEND/logic changes (API routes, schemas, business logic, anything
   touching data or state): propose an implementation plan and wait for
   approval before writing code.
 - DESIGN/STYLING-ONLY changes (Tailwind classes, layout, colors, static
-  markup, new visual sections): NEVER produce a plan. Go straight to
-  making the code edit, then report what changed. This applies by
-  default to any prompt in the current static-UI design phase — you do
-  not need to see the words "design-only" to know a prompt is design
-  work; use judgment based on what's being asked (visual/layout/styling
-  = no plan; new API endpoint, schema field, or business logic = plan).
+  markup, new visual sections, restyling existing pages): NEVER
+  produce a plan. Go straight to making the code edit, then report
+  what changed. Use judgment based on what's being asked — visual/
+  layout/styling = no plan; new API endpoint, schema field, or
+  business logic = plan.
+
+## Dev server & browser behavior
+
+Assume the Vite dev server is already running in a terminal I control.
+Do NOT start, stop, or restart it after making frontend changes, unless
+I explicitly ask. Do NOT automatically open, launch, navigate, or
+refresh a browser after a change — I will check results myself in my
+own already-open tab. Just make the edit and stop.

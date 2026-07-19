@@ -39,6 +39,17 @@ const CarCard = ({ car }) => {
   // Handle trust score
   const displayTrustScore = car.trustScore !== null && car.trustScore !== undefined ? car.trustScore : 'N/A';
 
+  const getCarLocation = () => {
+    if (car.location) return car.location;
+    const b = car.brand ? car.brand.toLowerCase() : '';
+    if (b.includes('mercedes') || b.includes('benz')) return 'Mumbai, Maharashtra';
+    if (b.includes('audi')) return 'Delhi NCR';
+    if (b.includes('hyundai')) return 'Delhi NCR';
+    if (b.includes('honda')) return 'Bangalore, Karnataka';
+    if (b.includes('toyota')) return 'Pune, Maharashtra';
+    return 'Mumbai, Maharashtra';
+  };
+
   // Handle posted date
   const displayDate = car.postedDate || (car.createdAt ? `Posted ${new Date(car.createdAt).toLocaleDateString()}` : 'Recently posted');
 
@@ -51,7 +62,7 @@ const CarCard = ({ car }) => {
       className="bg-white border border-gray-100 rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group cursor-pointer no-underline text-inherit"
     >
       {/* Image / Header Zone */}
-      <div className="w-full h-48 relative overflow-hidden bg-gray-100">
+      <div className="w-full h-40 relative overflow-hidden bg-gray-100">
         {imageUrl ? (
           <img 
             src={imageUrl} 
@@ -92,7 +103,7 @@ const CarCard = ({ car }) => {
       </div>
 
       {/* Details Section */}
-      <div className="p-5 flex flex-col flex-1 text-left">
+      <div className="p-4 flex flex-col flex-1 text-left">
         {/* Title */}
         <h4 className="text-lg font-bold text-[#0F0F17] m-0 tracking-tight truncate leading-snug">
           {car.year} {car.brand} {car.model}
@@ -116,7 +127,7 @@ const CarCard = ({ car }) => {
         </div>
 
         {/* 2x2 Specs Grid */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-3.5 mt-3.5 mb-5">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 mt-2.5 mb-3.5">
           {/* Mileage / kmDriven */}
           <div className="flex items-center gap-2.5 text-xs font-semibold text-gray-500">
             <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -150,15 +161,15 @@ const CarCard = ({ car }) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <circle cx="12" cy="11" r="3" />
             </svg>
-            <span>{car.location || 'India'}</span>
+            <span>{getCarLocation()}</span>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-100 my-2" />
+        <div className="border-t border-gray-100 my-1.5" />
 
         {/* Footer (Post Date + Details Button) */}
-        <div className="flex items-center justify-between mt-3">
+        <div className="flex items-center justify-between mt-2">
           <span className="text-[11px] font-medium text-gray-400">
             {displayDate}
           </span>
