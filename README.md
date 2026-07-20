@@ -24,5 +24,10 @@ A Node/Express API server that handles business logic, authentication, and datab
 ### 3. ML Service (`ml-service/`)
 A Django-based machine learning service that handles predictions, model training, and analytical queries.
 
+Dataset:
+Download the Cardekho Used Car Dataset from Kaggle.
+Place the downloaded CSV in:
+ml-service/datasets/cars_details_merges.csv
+
 ### 4. Docs (`docs/`)
 Centralized documentation folder for architecture, diagrams, design rules, and guidelines.
